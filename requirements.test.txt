@@ -1,0 +1,9 @@
+pytest
+pytest-socket
+pytest-asyncio
+mock
+homeassistant
+psutil-home-assistant
+sqlalchemy
+fnvhash
+fnv_hash_fast

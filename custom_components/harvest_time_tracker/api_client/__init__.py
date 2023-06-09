@@ -1,0 +1,87 @@
+import logging
+import json
+import aiohttp
+from datetime import (datetime)
+from .time_entry import TimeEntry
+
+_LOGGER = logging.getLogger(__name__)
+
+class ServerError(Exception): ...
+
+class RequestError(Exception): ...
+
+class HarvestApiClient:
+
+  def __init__(self, api_key, account_id):
+    if (api_key is None):
+      raise Exception('API KEY is not set')
+  
+    if (account_id is None):
+      raise Exception('Account ID is not set')
+
+    self._api_key = api_key
+    self._account_id = account_id
+    self._base_url = 'https://api.harvestapp.com'
+
+  async def async_get_time_entries(self, period_from: datetime, period_to: datetime) -> list:
+    """Get all time entries"""
+    page = 1
+    has_next_page = True
+    results = []
+
+    while (has_next_page):
+      async with aiohttp.ClientSession() as client:
+        headers = { "Authorization": f"Bearer {self._api_key}", "Harvest-Account-Id": self._account_id }
+        url = f'{self._base_url}/v2/time_entries?from={period_from.strftime("%Y-%m-%dT%H:%M:%SZ")}&to={period_to.strftime("%Y-%m-%dT%H:%M:%SZ")}&page={page}'
+        async with client.get(url, headers=headers) as response:
+          data = await self.__async_read_response__(response, url)
+          if data is not None:
+            results.extend(list(map(lambda d: TimeEntry(
+              d["id"],
+              d["client"]["name"],
+              d["project"]["name"],
+              d["task"]["name"],
+              float(d["hours"]),
+              self.__to_iso_date(d["spent_date"], d["started_time"]),
+              self.__to_iso_date(d["spent_date"], d["ended_time"]),
+              d["notes"]
+            ), data["time_entries"])))
+
+            if data["total_pages"] < page:
+              has_next_page = False
+            
+            page = page + 1
+          else:
+            has_next_page = False
+
+    return results
+
+  def __to_iso_date(self, date, time):
+    if date is None or time is None:
+      return None
+    
+    time_in_12_hours = datetime.strptime(time, "%I:%M %p")
+    time_in_24_hours = datetime.strftime(time_in_12_hours, "%H:%M")
+
+    return f'{date}T{time_in_24_hours}:00'
+
+  async def __async_read_response__(self, response, url):
+    """Reads the response, logging any json errors"""
+
+    text = await response.text()
+
+    if response.status >= 400:
+      if response.status >= 500:
+        msg = f'DO NOT REPORT - Harvest server error ({url}): {response.status}; {text}'
+        _LOGGER.debug(msg)
+        raise ServerError(msg)
+      elif response.status not in [401, 403, 404]:
+        msg = f'Failed to send request ({url}): {response.status}; {text}'
+        _LOGGER.debug(msg)
+        raise RequestError(msg)
+      return None
+
+    try:
+      return json.loads(text)
+    except:
+      raise Exception(f'Failed to extract response json: {url}; {text}')
