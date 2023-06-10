@@ -14,3 +14,6 @@ DATA_SCHEMA_ACCOUNT = vol.Schema({
   vol.Required(CONFIG_MAIN_API_KEY): str,
   vol.Required(CONFIG_MAIN_ACCOUNT_ID): str,
 })
+
+REGEX_DATE = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+REGEX_HOURS = "^[0-9]+(\\.[0-9]+)*$"

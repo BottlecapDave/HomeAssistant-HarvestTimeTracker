@@ -37,7 +37,7 @@ class HarvestTimeTrackerConfigFlow(ConfigFlow, domain=DOMAIN):
 
     # Setup our basic sensors
     return self.async_create_entry(
-      title="Account", 
+      title=user_input[CONFIG_MAIN_ACCOUNT_ID], 
       data=user_input
     )
 

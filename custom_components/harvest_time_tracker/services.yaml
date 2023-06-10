@@ -1,32 +1,44 @@
-update_target_config:
-  name: Update target rate config
-  description: Updates a given target rate's config. Please note this is temporary and will not persist between restarts.
+add_time_with_hours:
+  name: Add time with hours
+  description: Adds a new time entry specified with hours.
   target:
     entity:
-      integration: octopus_energy
-      domain: binary_sensor
+      integration: harvest_time_tracker
+      domain: sensor
   fields:
-    target_hours:
+    project_id:
+      name: Project Id
+      description: The id of the project the time should be logged against.
+      required: true
+      selector:
+        text:
+    task_id:
+      name: Task Id
+      description: The id of the task the time should be logged against.
+      required: true
+      selector:
+        text:
+    date:
+      name: Date
+      description: The date the time should be logged on.
+      required: true
+      selector:
+        date:
+    hours:
       name: Hours
-      description: The optional number of hours the target rate sensor should come on during a 24 hour period.
+      description: The hours to log against the specified project and task.
+      required: true
       example: '1.5'
       selector:
-        text:
-    target_start_time:
-      name: Start time
-      description: The optional time the evaluation period should start.
-      example: '06:00'
+        number:
+          min: 0
+          max: 24
+          step: 0.01
+          mode: box
+    notes:
+      name: Notes
+      description: Any notes you want to attach to the entry.
+      required: false
       selector:
         text:
-    target_end_time:
-      name: End time
-      description: The optional time the evaluation period should end.
-      example: '19:00'
-      selector:
-        text:
-    target_offset:
-      name: Offset
-      description:
-        The optional offset to apply to the target rate when it starts
-      selector:
-        text:
+    

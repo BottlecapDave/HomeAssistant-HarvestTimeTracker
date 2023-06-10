@@ -1,11 +1,14 @@
 import logging
 
-from datetime import (timedelta)
+import re
+from datetime import (datetime, timedelta)
 import pytz
 
 utc=pytz.UTC
 
-from homeassistant.core import HomeAssistant
+import voluptuous as vol
+
+from homeassistant.core import (HomeAssistant, callback)
 from homeassistant.helpers.entity import generate_entity_id
 
 from homeassistant.helpers.update_coordinator import (
@@ -17,14 +20,18 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.helpers.restore_state import RestoreEntity
 
-from homeassistant.util.dt import (now, as_utc)
+from homeassistant.util.dt import (now, as_utc, parse_datetime)
+
+from ..api_client import HarvestApiClient
+
+from ..const import (REGEX_DATE, REGEX_HOURS)
 
 _LOGGER = logging.getLogger(__name__)
 
 class HarvestHoursToday(CoordinatorEntity, SensorEntity, RestoreEntity):
   """Sensor for determining the total hours from today"""
 
-  def __init__(self, hass: HomeAssistant, coordinator, account_id: str):
+  def __init__(self, hass: HomeAssistant, coordinator, account_id: str, client: HarvestApiClient):
     """Init sensor."""
 
     super().__init__(coordinator)
@@ -34,6 +41,7 @@ class HarvestHoursToday(CoordinatorEntity, SensorEntity, RestoreEntity):
       "account_id": account_id
     }
     self._account_id = account_id
+    self._client = client
 
     self.entity_id = generate_entity_id("sensor.{}", self.unique_id, hass=hass)
 
@@ -92,3 +100,23 @@ class HarvestHoursToday(CoordinatorEntity, SensorEntity, RestoreEntity):
         self._attributes[x] = state.attributes[x]
     
       _LOGGER.debug(f'Restored HarvestHoursToday state: {self._state}')
+
+  @callback
+  async def async_add_time_with_hours(self, project_id: int, task_id: int, date: str, hours: str, notes: str = None):
+    """Update sensors config"""
+
+    # Inputs from automations can include quotes, so remove these
+    trimmed_date = date.strip('\"')
+    matches = re.search(REGEX_DATE, trimmed_date)
+    if matches is None:
+      raise vol.Invalid(f"Date '{trimmed_date}' must match format of YYYY-MM-DD.")
+    
+    # Inputs from automations can include quotes, so remove these
+    trimmed_hours = hours.strip('\"')
+    matches = re.search(REGEX_HOURS, trimmed_hours)
+    if matches is None:
+      raise vol.Invalid(f"Hours must be a valid float.")
+    
+    parsed_date = parse_datetime(f'{trimmed_date}T00:00:00')
+    parsed_hours = float(trimmed_hours)
+    await self._client.async_create_time_entry_with_hours(project_id, task_id, parsed_date, parsed_hours, notes)
