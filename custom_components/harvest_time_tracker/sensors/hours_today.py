@@ -1,6 +1,9 @@
 import logging
 
 from datetime import (timedelta)
+import pytz
+
+utc=pytz.UTC
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import generate_entity_id
@@ -14,7 +17,7 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.helpers.restore_state import RestoreEntity
 
-from homeassistant.util.dt import (utcnow, as_utc)
+from homeassistant.util.dt import (now, as_utc)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -66,10 +69,12 @@ class HarvestHoursToday(CoordinatorEntity, SensorEntity, RestoreEntity):
     self._state = 0
 
     if entries is not None:
-      today_start = utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-      today_end = (utcnow() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+      today_start = now().replace(hour=0, minute=0, second=0, microsecond=0)
+      today_end = (now() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
       for entry in entries:
-        if (as_utc(entry.start) >= today_start and as_utc(entry.end) < today_end):
+        entry_start = as_utc(entry.start)
+        entry_end = as_utc(entry.end)
+        if (entry_start >= today_start and entry_end < today_end):
           self._state = self._state + entry.hours
 
     return self._state
