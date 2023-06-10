@@ -8,9 +8,13 @@ from .const import (
 
   CONFIG_MAIN_API_KEY,
   CONFIG_MAIN_ACCOUNT_ID,
+
+  DATA_API_CLIENT
 )
 
 from .api_client import HarvestApiClient
+
+from .coordinators.time_entries import async_setup_time_entries_coordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,6 +41,11 @@ async def async_setup_entry(hass, entry):
 
 async def async_setup_dependencies(hass, config):
   """Setup the coordinator and api client which will be shared by various entities"""
+
+  hass.data[DOMAIN][DATA_API_CLIENT] = HarvestApiClient(config[CONFIG_MAIN_API_KEY], config[CONFIG_MAIN_ACCOUNT_ID])
+
+  await async_setup_time_entries_coordinator(hass, hass.data[DOMAIN][DATA_API_CLIENT])
+
 
 async def options_update_listener(hass, entry):
   """Handle options update."""

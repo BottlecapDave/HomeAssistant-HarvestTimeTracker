@@ -2,6 +2,9 @@ import logging
 import json
 import aiohttp
 from datetime import (datetime)
+
+from homeassistant.util.dt import (parse_datetime)
+
 from .time_entry import TimeEntry
 
 _LOGGER = logging.getLogger(__name__)
@@ -55,15 +58,50 @@ class HarvestApiClient:
             has_next_page = False
 
     return results
+  
+  async def async_create_time_entry_with_hours(
+      self,
+      project_id: str,
+      task_id: str,
+      spent_date: datetime,
+      hours: float,
+      notes: str
+  ) -> TimeEntry:
+    """Get all time entries"""
+    async with aiohttp.ClientSession() as client:
+      headers = { "Authorization": f"Bearer {self._api_key}", "Harvest-Account-Id": self._account_id }
+      payload = {
+        "project_id": project_id,
+        "task_id": task_id,
+        "spent_date": spent_date.strftime("%Y-%m-%d"),
+        "hours": hours,
+        "notes": notes
+      }
+      url = f'{self._base_url}/v2/time_entries'
+      async with client.post(url, json=payload, headers=headers) as response:
+        data = await self.__async_read_response__(response, url)
+        return TimeEntry(
+          data["id"],
+          data["client"]["name"],
+          data["project"]["name"],
+          data["task"]["name"],
+          float(data["hours"]),
+          self.__to_iso_date(data["spent_date"], data["started_time"]),
+          self.__to_iso_date(data["spent_date"], data["ended_time"]),
+          data["notes"]
+        )
 
   def __to_iso_date(self, date, time):
-    if date is None or time is None:
+    if date is None:
       return None
+    
+    if time is None:
+      return parse_datetime(f'{date}T00:00:00')
     
     time_in_12_hours = datetime.strptime(time, "%I:%M %p")
     time_in_24_hours = datetime.strftime(time_in_12_hours, "%H:%M")
 
-    return f'{date}T{time_in_24_hours}:00'
+    return parse_datetime(f'{date}T{time_in_24_hours}:00')
 
   async def __async_read_response__(self, response, url):
     """Reads the response, logging any json errors"""

@@ -5,9 +5,6 @@ from homeassistant.components.diagnostics import async_redact_data
 
 from .const import (
   DOMAIN,
-
-  DATA_ACCOUNT_ID,
-  DATA_CLIENT
 )
 
 _LOGGER = logging.getLogger(__name__)

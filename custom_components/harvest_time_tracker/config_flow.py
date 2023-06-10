@@ -44,12 +44,6 @@ class HarvestTimeTrackerConfigFlow(ConfigFlow, domain=DOMAIN):
   async def async_step_user(self, user_input):
     """Setup based on user config"""
 
-    is_account_setup = False
-    for entry in self._async_current_entries(include_ignore=False):
-      if CONFIG_MAIN_API_KEY in entry.data:
-        is_account_setup = True
-        break
-
     if user_input is not None:
       # We are setting up our initial stage
       if CONFIG_MAIN_API_KEY in user_input:

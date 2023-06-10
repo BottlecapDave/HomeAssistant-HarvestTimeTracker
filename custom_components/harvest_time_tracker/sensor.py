@@ -4,10 +4,15 @@ from homeassistant.util.dt import (utcnow)
 from homeassistant.core import HomeAssistant
 
 
+from .sensors.hours_today import HarvestHoursToday
+
 from .const import (
   DOMAIN,
   
-  CONFIG_MAIN_API_KEY
+  CONFIG_MAIN_API_KEY,
+  CONFIG_MAIN_ACCOUNT_ID,
+
+  DATA_TIME_ENTRIES_COORDINATOR
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -26,6 +31,8 @@ async def async_setup_default_sensors(hass: HomeAssistant, entry, async_add_enti
   if entry.options:
     config.update(entry.options)
   
-  entities = []
+  entities = [
+    HarvestHoursToday(hass, hass.data[DOMAIN][DATA_TIME_ENTRIES_COORDINATOR], entry.data[CONFIG_MAIN_ACCOUNT_ID])
+  ]
 
   async_add_entities(entities, True)
