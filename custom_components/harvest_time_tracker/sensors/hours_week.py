@@ -17,16 +17,14 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.helpers.restore_state import RestoreEntity
 
-from homeassistant.util.dt import (now)
-
 from ..api_client import HarvestApiClient
 
-from . import async_create_time_entry_with_hours, get_todays_hours
+from . import async_create_time_entry_with_hours, get_all_hours
 
 _LOGGER = logging.getLogger(__name__)
 
-class HarvestHoursToday(CoordinatorEntity, SensorEntity, RestoreEntity):
-  """Sensor for determining the total hours from today"""
+class HarvestHoursWeek(CoordinatorEntity, SensorEntity, RestoreEntity):
+  """Sensor for determining the total hours for the week"""
 
   def __init__(self, hass: HomeAssistant, coordinator, account_id: str, client: HarvestApiClient):
     """Init sensor."""
@@ -45,12 +43,12 @@ class HarvestHoursToday(CoordinatorEntity, SensorEntity, RestoreEntity):
   @property
   def unique_id(self):
     """The id of the sensor."""
-    return f"harvest_time_tracker_{self._account_id}_hours_today"
+    return f"harvest_time_tracker_{self._account_id}_hours_week"
     
   @property
   def name(self):
     """Name of the sensor."""
-    return f"Harvest Hours Today ({self._account_id})"
+    return f"Harvest Hours Week ({self._account_id})"
 
   @property
   def icon(self):
@@ -72,7 +70,7 @@ class HarvestHoursToday(CoordinatorEntity, SensorEntity, RestoreEntity):
     """Calculate the correct hours"""
     entries = self.coordinator.data
     
-    result = get_todays_hours(now(), entries)
+    result = get_all_hours(entries)
     self._state = result.hours
     self._attributes["entries"] = result.entries
 

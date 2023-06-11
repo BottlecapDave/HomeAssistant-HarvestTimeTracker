@@ -41,8 +41,11 @@ class HarvestApiClient:
           if data is not None:
             results.extend(list(map(lambda d: TimeEntry(
               d["id"],
+              d["client"]["id"],
               d["client"]["name"],
+              d["project"]["id"],
               d["project"]["name"],
+              d["task"]["id"],
               d["task"]["name"],
               float(d["hours"]),
               self.__to_iso_date(d["spent_date"], d["started_time"]),
@@ -82,8 +85,11 @@ class HarvestApiClient:
         data = await self.__async_read_response__(response, url)
         return TimeEntry(
           data["id"],
+          data["client"]["id"],
           data["client"]["name"],
+          data["project"]["id"],
           data["project"]["name"],
+          data["task"]["id"],
           data["task"]["name"],
           float(data["hours"]),
           self.__to_iso_date(data["spent_date"], data["started_time"]),

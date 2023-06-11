@@ -1,10 +1,12 @@
 from datetime import timedelta
 import logging
 import voluptuous as vol
+
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv, entity_platform
 
 from .sensors.hours_today import HarvestHoursToday
+from .sensors.hours_week import HarvestHoursWeek
 
 from .const import (
   DOMAIN,
@@ -49,9 +51,13 @@ async def async_setup_default_sensors(hass: HomeAssistant, entry, async_add_enti
 
   if entry.options:
     config.update(entry.options)
+
+  account_id = entry.data[CONFIG_MAIN_ACCOUNT_ID]
+  api_client = hass.data[DOMAIN][account_id][DATA_API_CLIENT]
   
   entities = [
-    HarvestHoursToday(hass, hass.data[DOMAIN][DATA_TIME_ENTRIES_COORDINATOR], entry.data[CONFIG_MAIN_ACCOUNT_ID], hass.data[DOMAIN][DATA_API_CLIENT])
+    HarvestHoursToday(hass, hass.data[DOMAIN][account_id][DATA_TIME_ENTRIES_COORDINATOR], account_id, api_client),
+    HarvestHoursWeek(hass, hass.data[DOMAIN][account_id][DATA_TIME_ENTRIES_COORDINATOR], account_id, api_client)
   ]
 
   async_add_entities(entities, True)

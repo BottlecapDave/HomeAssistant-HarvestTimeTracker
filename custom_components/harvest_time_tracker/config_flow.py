@@ -10,6 +10,7 @@ from .const import (
   
   CONFIG_MAIN_API_KEY,
   CONFIG_MAIN_ACCOUNT_ID,
+  CONFIG_MAIN_WEEK_START,
   
   DATA_SCHEMA_ACCOUNT,
 )
@@ -74,7 +75,12 @@ class OptionsFlowHandler(OptionsFlow):
 
       return self.async_show_form(
         step_id="user", data_schema=vol.Schema({
-          vol.Required(CONFIG_MAIN_API_KEY, default=config[CONFIG_MAIN_API_KEY]): str
+          vol.Required(CONFIG_MAIN_API_KEY, default=config[CONFIG_MAIN_API_KEY]): str,
+          vol.Required(CONFIG_MAIN_WEEK_START, default=config[CONFIG_MAIN_WEEK_START]): vol.In({
+            "Saturday": "Saturday",
+            "Sunday": "Sunday",
+            "Monday": "Monday"
+          }),
         })
       )
 

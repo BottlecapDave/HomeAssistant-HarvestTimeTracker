@@ -8,8 +8,10 @@ from .const import (
 
   CONFIG_MAIN_API_KEY,
   CONFIG_MAIN_ACCOUNT_ID,
+  CONFIG_MAIN_WEEK_START,
 
-  DATA_API_CLIENT
+  DATA_API_CLIENT,
+  DATA_WEEK_START,
 )
 
 from .api_client import HarvestApiClient
@@ -42,9 +44,21 @@ async def async_setup_entry(hass, entry):
 async def async_setup_dependencies(hass, config):
   """Setup the coordinator and api client which will be shared by various entities"""
 
-  hass.data[DOMAIN][DATA_API_CLIENT] = HarvestApiClient(config[CONFIG_MAIN_API_KEY], config[CONFIG_MAIN_ACCOUNT_ID])
+  account_id = config[CONFIG_MAIN_ACCOUNT_ID]
+  api_key = config[CONFIG_MAIN_API_KEY]
 
-  await async_setup_time_entries_coordinator(hass, hass.data[DOMAIN][DATA_API_CLIENT])
+  if hass.data[DOMAIN] is None:
+    hass.data[DOMAIN] = dict({
+      account_id: {}
+    })
+
+  if account_id not in hass.data[DOMAIN]:
+    hass.data[DOMAIN][account_id] = dict({})
+
+  hass.data[DOMAIN][account_id][DATA_API_CLIENT] = HarvestApiClient(api_key, account_id)
+  hass.data[DOMAIN][account_id][DATA_WEEK_START] = config[CONFIG_MAIN_WEEK_START]
+
+  await async_setup_time_entries_coordinator(hass, hass.data[DOMAIN][account_id][DATA_API_CLIENT], account_id)
 
 
 async def options_update_listener(hass, entry):
