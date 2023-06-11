@@ -3,10 +3,10 @@
   "config": {
     "step": {
       "user": {
-        "description": "Setup your basic account information.",
+        "description": "Setup your basic account information - https://id.getharvest.com/developers",
         "data": {
-          "api_key": "Personal API key",
-          "account_id": "Your account Id"
+          "api_key": "Personal Access Token",
+          "account_id": "Account ID"
         }
       }
     },
@@ -16,10 +16,10 @@
     "step": {
       "user": {
         "title": "Update Account Info",
-        "description": "Update your basic account information.",
+        "description": "Update your basic account information - https://id.getharvest.com/developers",
         "data": {
-          "api_key": "Personal API key",
-          "account_id": "Your account Id"
+          "api_key": "Personal Access Token",
+          "account_id": "Account ID"
         }
       }
     },
