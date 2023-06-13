@@ -7,6 +7,8 @@ from homeassistant.util.dt import (parse_datetime)
 
 from .time_entry import TimeEntry
 
+from .task import Task
+
 _LOGGER = logging.getLogger(__name__)
 
 class ServerError(Exception): ...
@@ -57,6 +59,35 @@ class HarvestApiClient:
               has_next_page = False
             
             page = page + 1
+          else:
+            has_next_page = False
+
+    return results
+  
+  async def async_get_tasks(self) -> list:
+    """Get all time entries"""
+    has_next_page = True
+    url = f'{self._base_url}/v2/task_assignments?is_active=true&page=1'
+    results = []
+
+    while (has_next_page):
+      async with aiohttp.ClientSession() as client:
+        headers = { "Authorization": f"Bearer {self._api_key}", "Harvest-Account-Id": self._account_id }
+        async with client.get(url, headers=headers) as response:
+          data = await self.__async_read_response__(response, url)
+          if data is not None:
+            results.extend(list(map(lambda d: Task(
+              d["task"]["id"],
+              d["project"]["id"],
+              d["project"]["name"],
+              d["task"]["name"],
+            ), data["task_assignments"])))
+
+            if data["links"]["next"] is not None:
+              url = data["links"]["next"]
+            else:
+              has_next_page = False
+            
           else:
             has_next_page = False
 
