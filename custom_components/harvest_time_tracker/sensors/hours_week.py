@@ -53,7 +53,7 @@ class HarvestHoursWeek(CoordinatorEntity, SensorEntity, RestoreEntity):
   @property
   def icon(self):
     """Icon of the sensor."""
-    return "mdi:time"
+    return "mdi:clock"
 
   @property
   def extra_state_attributes(self):
