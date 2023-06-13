@@ -21,7 +21,8 @@ async def test_when_create_time_entry_with_hours_then_time_entry_added():
 
     project_id = tasks[0].project_id
     task_id = tasks[0].id
-    date = utcnow().strftime("%Y-%m-%d")
+    now = utcnow()
+    date = now.strftime("%Y-%m-%d")
     hours = "0.1"
     notes = f"Integration Test {str(uuid.uuid4())}"
 
@@ -39,6 +40,8 @@ async def test_when_create_time_entry_with_hours_then_time_entry_added():
     entry_exists = False
     for entry in entries:
         if entry.notes == notes:
+            assert entry.start == parse_datetime(now.strftime("%Y-%m-%dT00:00:00"))
+            assert entry.end == parse_datetime(now.strftime("%Y-%m-%dT00:00:00"))
             entry_exists = True
             break
     
