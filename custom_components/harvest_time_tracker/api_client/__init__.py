@@ -67,7 +67,7 @@ class HarvestApiClient:
   async def async_get_tasks(self) -> list:
     """Get all time entries"""
     has_next_page = True
-    url = f'{self._base_url}/v2/task_assignments?is_active=true&page=1'
+    url = f'{self._base_url}/v2/users/me/project_assignments?is_active=true&page=1'
     results = []
 
     while (has_next_page):
@@ -76,12 +76,16 @@ class HarvestApiClient:
         async with client.get(url, headers=headers) as response:
           data = await self.__async_read_response__(response, url)
           if data is not None:
-            results.extend(list(map(lambda d: Task(
-              d["task"]["id"],
-              d["project"]["id"],
-              d["project"]["name"],
-              d["task"]["name"],
-            ), data["task_assignments"])))
+            for project_assignment in data["project_assignments"]:
+              for task_assignment in project_assignment["task_assignments"]:
+                results.append(Task(
+                  task_assignment["task"]["id"],
+                  project_assignment["client"]["id"],
+                  project_assignment["client"]["name"],
+                  project_assignment["project"]["id"],
+                  project_assignment["project"]["name"],
+                  task_assignment["task"]["name"],
+                ))
 
             if data["links"]["next"] is not None:
               url = data["links"]["next"]

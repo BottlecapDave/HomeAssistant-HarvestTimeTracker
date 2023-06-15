@@ -88,8 +88,10 @@ automations:
       default:
         - service: harvest_time_tracker.add_time_with_hours
           data:
-            project_id: 9012
-            task_id: 3456
+            project_id: >
+              {{ state_attr('select.harvest_time_tracker_XXX_default_task', 'project_id') }}
+            task_id: >
+              {{ state_attr('select.harvest_time_tracker_XXX_default_task', 'task_id') }}
             date: >
               {{ (trigger.calendar_event.end | as_datetime).strftime("%Y-%m-%d") }}
             hours: >
