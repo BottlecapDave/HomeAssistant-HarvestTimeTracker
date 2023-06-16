@@ -24,10 +24,10 @@
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "commitizen": "^4.3.0",
-    "conventional-changelog-eslint": "^3.0.9",
+    "conventional-changelog-eslint": "^4.0.0",
     "cz-customizable": "^7.0.0",
     "husky": "^4.3.8",
-    "semantic-release": "^21.0.1"
+    "semantic-release": "^21.0.5"
   },
   "config": {
     "commitizen": {
