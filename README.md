@@ -21,12 +21,9 @@ There are multiple ways of installing the integration.
 
 ### HACS
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://hacs.xyz/docs/faq/custom_repositories)
 
-This integration can be installed directly via HACS. To install:
-
-* [Add the repository](https://my.home-assistant.io/redirect/hacs_repository/?owner=BottlecapDave&repository=homeassistant-harvesttimetracker&category=integration) to your HACS installation
-* Click `Download`
+While the integration isn't available in the HACS store yet, you can install it as a [custom repository](https://hacs.xyz/docs/faq/custom_repositories), providing the url `https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker` and category of `integration`. Once installed, don't forget to restart your home assistant instance for the integration to be picked up.
 
 ### Manual
 
