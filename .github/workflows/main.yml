@@ -41,7 +41,7 @@ jobs:
           ACCOUNT_ID: ${{ secrets.HARVEST_ACCOUNT_ID }}
   release:
     name: Release
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     needs: 
     - validate
     - test
@@ -59,11 +59,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run release
-      - name: Merge main into develop
+      - name: Merge master into develop
         uses: devmasx/merge-branch@master
         with:
           type: now
-          message: "chore: Merged main into develop"
-          from_branch: main
+          message: "chore: Merged master into develop"
+          from_branch: master
           target_branch: develop
           github_token: ${{ secrets.GITHUB_TOKEN }}
