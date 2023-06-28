@@ -65,7 +65,9 @@ class HarvestDefaultTask(SelectEntity, RestoreEntity):
   @property
   def options(self) -> list[str]:
     """The options the selected option."""
-    return list(["None"]) + list(self._options.keys())
+    tasks = list(self._options.keys())
+    tasks.sort()
+    return list(["None"]) + tasks
 
   async def async_update(self):
     """Retrieve the latest tasks/projects"""
