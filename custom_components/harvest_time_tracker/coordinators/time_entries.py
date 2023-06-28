@@ -35,7 +35,7 @@ async def async_setup_time_entries_coordinator(hass, client: HarvestApiClient, a
     except:
       _LOGGER.debug('Failed to retrieve time entries')
 
-    return hass.data[DOMAIN][account_id][key]
+    return hass.data[DOMAIN][account_id][key] if account_id in hass.data[DOMAIN] and key in hass.data[DOMAIN][account_id] else []
 
   hass.data[DOMAIN][account_id][DATA_TIME_ENTRIES_COORDINATOR] = DataUpdateCoordinator(
     hass,
