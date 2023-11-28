@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.0.1...v1.1.0) (2023-11-28)
+
+
+### Features
+
+* Added portuguese translations - Thanks @ViPeR5000 ([bc9b4b4](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/bc9b4b43840487b376cc65de410925c005106732))
+
 ## [1.0.1](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.0.0...v1.0.1) (2023-06-28)
 
 
