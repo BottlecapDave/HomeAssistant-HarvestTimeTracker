@@ -33,7 +33,7 @@ This sensor will present the total hours for the week, starting from the day you
 
 `select.harvest_time_tracker_{ACCOUNT_ID}_default_task`
 
-This select sensor is used to see all of your assigned tasks and select one which can be used as a default in automations (see [service example](../services.md#service-harvest_time_trackeradd_time_with_hours)).
+This select sensor is used to see all of your assigned tasks and select one which can be used as a default in automations (see [service example](./services.md#service-harvest_time_trackeradd_time_with_hours)).
 
 | Attribute Name | Note |
 |----------------|------|
