@@ -9,7 +9,7 @@
     "repairs",
     "recorder"
   ],
-  "documentation": "https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/",
+  "documentation": "https://bottlecapdave.github.io/HomeAssistant-HarvestTimeTracker",
   "homekit": {},
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/issues",

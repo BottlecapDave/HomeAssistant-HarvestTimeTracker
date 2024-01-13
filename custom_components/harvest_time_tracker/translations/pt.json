@@ -6,7 +6,8 @@
         "description": "Configurar as tuas informações sobre a tua conta - https://id.getharvest.com/developers",
         "data": {
           "api_key": "Token de acesso pessoal",
-          "account_id": "Identificador de conta"
+          "account_id": "Identificador de conta",
+          "week_start": "O início da semana. Isso será usado para contadores semanais"
         }
       }
     },
@@ -19,7 +20,8 @@
         "description": "Atualizar as tuas informações - https://id.getharvest.com/developers",
         "data": {
           "api_key": "Token de acesso pessoal",
-          "account_id": "Identificador de conta"
+          "account_id": "Identificador de conta",
+          "week_start": "O início da semana. Isso será usado para contadores semanais"
         }
       }
     },
