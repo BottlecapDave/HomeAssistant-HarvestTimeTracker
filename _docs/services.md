@@ -1,10 +1,6 @@
 # Services
 
-- [Services](#services)
-  - [Service harvest\_time\_tracker.add\_time\_with\_hours](#service-harvest_time_trackeradd_time_with_hours)
-
-
-## Service harvest_time_tracker.add_time_with_hours
+## add_time_with_hours
 
 Service for adding a time entry by specifying hours instead of time period.
 
@@ -17,7 +13,9 @@ Service for adding a time entry by specifying hours instead of time period.
 | `data.hours`             | `no`     | The hours to be logged in the entry                                                                                   |
 | `data.notes`             | `yes`    | The optional notes to add to the entry                                                                                |
 
-This can be used via automations in the following way.
+### Automation Example
+
+Below is an example of adding an entry to a specific task when a calendar event with certain text ends. The entry has the hours of the calendar event. If the calendar entry is for something else, we add an entry to our elected default task.
 
 ```yaml
 automations:

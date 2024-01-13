@@ -6,7 +6,8 @@
         "description": "Setup your basic account information - https://id.getharvest.com/developers",
         "data": {
           "api_key": "Personal Access Token",
-          "account_id": "Account ID"
+          "account_id": "Account ID",
+          "week_start": "The start of the week. This will be used for weekly counters"
         }
       }
     },
@@ -19,7 +20,8 @@
         "description": "Update your basic account information - https://id.getharvest.com/developers",
         "data": {
           "api_key": "Personal Access Token",
-          "account_id": "Account ID"
+          "account_id": "Account ID",
+          "week_start": "The start of the week. This will be used for weekly counters"
         }
       }
     },
