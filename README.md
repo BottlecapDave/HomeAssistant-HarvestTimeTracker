@@ -6,6 +6,7 @@
   - [How to install](#how-to-install)
     - [HACS](#hacs)
     - [Manual](#manual)
+  - [How to setup](#how-to-setup)
   - [Docs](#docs)
   - [FAQ](#faq)
   - [Sponsorship](#sponsorship)
@@ -33,13 +34,18 @@ You should take the latest [published release](https://github.com/BottlecapDave/
 
 To install, place the contents of `custom_components` into the `<config directory>/custom_components` folder of your Home Assistant installation. Once installed, don't forget to restart your home assistant instance for the integration to be picked up.
 
+## How to setup
+
+Please follow the [setup guide](https://bottlecapdave.github.io/HomeAssistant-HarvestTimeTracker/setup/account) to setup the integration. This guide details the configuration, along with the sensors that will be available to you.
+
 ## Docs
 
-To get full use of the integration, please visit the [docs](./_docs/readme.md).
+To get full use of the integration, please visit the [docs](https://bottlecapdave.github.io/HomeAssistant-HarvestTimeTracker/).
 
 ## FAQ
 
-Before raising anything, please read through the [faq](./_docs/faq.md). If you have found a bug or have a feature request please [raise it](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/issues) using the appropriate report template.
+Before raising anything, please read through the [faq](https://bottlecapdave.github.io/HomeAssistant-HarvestTimeTracker/faq.md). If you have found a bug or have a feature request please [raise it](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/issues) using the appropriate report template.
 
 ## Sponsorship
+
 If you are enjoying this integration, why not make a one off or monthly [GitHub sponsorship](https://github.com/sponsors/bottlecapdave).
