@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.1.0...v1.1.1) (2024-01-13)
+
+
+### Bug Fixes
+
+* Added missing configuration translation ([68688cc](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/68688cc54625af684c98540df538cd659125ffc6))
+
 # [1.1.0](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.0.1...v1.1.0) (2023-11-28)
 
 
