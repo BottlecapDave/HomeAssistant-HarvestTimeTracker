@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.1.1...v1.1.2) (2024-06-29)
+
+
+### Bug Fixes
+
+* Fixed warning around use of deprecated HA function (15 minutes dev time) ([b6e458b](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/b6e458b14e0613cd4c853661de6a13aa39f5a34a))
+
 ## [1.1.1](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.1.0...v1.1.1) (2024-01-13)
 
 
