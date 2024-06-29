@@ -20,6 +20,8 @@ from .coordinators.time_entries import async_setup_time_entries_coordinator
 
 _LOGGER = logging.getLogger(__name__)
 
+PLATFORMS = ["sensor", "select"]
+
 async def async_setup_entry(hass, entry):
   """This is called from the config flow."""
   hass.data.setdefault(DOMAIN, {})
@@ -33,13 +35,7 @@ async def async_setup_entry(hass, entry):
     await async_setup_dependencies(hass, config)
 
     # Forward our entry to setup our default sensors
-    hass.async_create_task(
-      hass.config_entries.async_forward_entry_setup(entry, "sensor")
-    )
-
-    hass.async_create_task(
-      hass.config_entries.async_forward_entry_setup(entry, "select")
-    )
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
   
   entry.async_on_unload(entry.add_update_listener(options_update_listener))
 
@@ -71,13 +67,8 @@ async def options_update_listener(hass, entry):
 
 async def async_unload_entry(hass, entry):
     """Unload a config entry."""
+    unload_ok = True
     if CONFIG_MAIN_API_KEY in entry.data:
-      target_domain = "sensor"
-
-    unload_ok = all(
-        await asyncio.gather(
-            *[hass.config_entries.async_forward_entry_unload(entry, target_domain)]
-        )
-    )
+      unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
     return unload_ok
