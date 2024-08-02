@@ -1,3 +1,4 @@
+import re
 import logging
 import json
 import aiohttp
@@ -6,14 +7,33 @@ from datetime import (datetime)
 from homeassistant.util.dt import (parse_datetime)
 
 from .time_entry import TimeEntry
-
 from .task import Task
 
 _LOGGER = logging.getLogger(__name__)
 
-class ServerError(Exception): ...
+class ApiError(Exception): ...
 
-class RequestError(Exception): ...
+class ServerError(ApiError): ...
+
+class RequestError(ApiError): ...
+
+REGEX_TIME = "^[0-9]{2}:[0-9]{2}$"
+
+def to_iso_date(date, time):
+  if date is None:
+    return None
+  
+  if time is None:
+    return parse_datetime(f'{date}T00:00:00')
+  
+  matches = re.search(REGEX_TIME, time)
+  if matches is None:
+    time_in_12_hours = datetime.strptime(time, "%I:%M%p")
+    time_in_24_hours = datetime.strftime(time_in_12_hours, "%H:%M")
+  else:
+    time_in_24_hours = time
+
+  return parse_datetime(f'{date}T{time_in_24_hours}:00')
 
 class HarvestApiClient:
 
@@ -28,7 +48,7 @@ class HarvestApiClient:
     self._account_id = account_id
     self._base_url = 'https://api.harvestapp.com'
 
-  async def async_get_time_entries(self, period_from: datetime, period_to: datetime) -> list:
+  async def async_get_time_entries(self, period_from: datetime, period_to: datetime) -> list[TimeEntry]:
     """Get all time entries"""
     page = 1
     has_next_page = True
@@ -41,24 +61,16 @@ class HarvestApiClient:
         async with client.get(url, headers=headers) as response:
           data = await self.__async_read_response__(response, url)
           if data is not None:
-            results.extend(list(map(lambda d: TimeEntry(
-              d["id"],
-              d["client"]["id"],
-              d["client"]["name"],
-              d["project"]["id"],
-              d["project"]["name"],
-              d["task"]["id"],
-              d["task"]["name"],
-              float(d["hours"]),
-              self.__to_iso_date(d["spent_date"], d["started_time"]),
-              self.__to_iso_date(d["spent_date"], d["ended_time"]),
-              d["notes"]
-            ), data["time_entries"])))
+            try:
+              results.extend(list(map(lambda d: self.__to_time_entry(d), data["time_entries"])))
 
-            if data["total_pages"] < page:
-              has_next_page = False
-            
-            page = page + 1
+              if data["total_pages"] < page:
+                has_next_page = False
+              
+              page = page + 1
+            except:
+              _LOGGER.debug(f'Failed to transform data: {data}')
+              raise
           else:
             has_next_page = False
 
@@ -76,22 +88,25 @@ class HarvestApiClient:
         async with client.get(url, headers=headers) as response:
           data = await self.__async_read_response__(response, url)
           if data is not None:
-            for project_assignment in data["project_assignments"]:
-              for task_assignment in project_assignment["task_assignments"]:
-                results.append(Task(
-                  task_assignment["task"]["id"],
-                  project_assignment["client"]["id"],
-                  project_assignment["client"]["name"],
-                  project_assignment["project"]["id"],
-                  project_assignment["project"]["name"],
-                  task_assignment["task"]["name"],
-                ))
+            try:
+              for project_assignment in data["project_assignments"]:
+                for task_assignment in project_assignment["task_assignments"]:
+                  results.append(Task(
+                    task_assignment["task"]["id"],
+                    project_assignment["client"]["id"],
+                    project_assignment["client"]["name"],
+                    project_assignment["project"]["id"],
+                    project_assignment["project"]["name"],
+                    task_assignment["task"]["name"],
+                  ))
 
-            if data["links"]["next"] is not None:
-              url = data["links"]["next"]
-            else:
-              has_next_page = False
-            
+              if data["links"]["next"] is not None:
+                url = data["links"]["next"]
+              else:
+                has_next_page = False
+            except:
+              _LOGGER.debug(f'Failed to transform data: {data}')
+              raise
           else:
             has_next_page = False
 
@@ -118,31 +133,27 @@ class HarvestApiClient:
       url = f'{self._base_url}/v2/time_entries'
       async with client.post(url, json=payload, headers=headers) as response:
         data = await self.__async_read_response__(response, url)
-        return TimeEntry(
-          data["id"],
-          data["client"]["id"],
-          data["client"]["name"],
-          data["project"]["id"],
-          data["project"]["name"],
-          data["task"]["id"],
-          data["task"]["name"],
-          float(data["hours"]),
-          self.__to_iso_date(data["spent_date"], data["started_time"]),
-          self.__to_iso_date(data["spent_date"], data["ended_time"]),
-          data["notes"]
-        )
+        if data is not None:
+          try:
+            return self.__to_time_entry(data)
+          except:
+            _LOGGER.debug(f'Failed to transform data: {data}')
+            raise
 
-  def __to_iso_date(self, date, time):
-    if date is None:
-      return None
-    
-    if time is None:
-      return parse_datetime(f'{date}T00:00:00')
-    
-    time_in_12_hours = datetime.strptime(time, "%I:%M %p")
-    time_in_24_hours = datetime.strftime(time_in_12_hours, "%H:%M")
-
-    return parse_datetime(f'{date}T{time_in_24_hours}:00')
+  def __to_time_entry(self, data):
+    return TimeEntry(
+      data["id"],
+      data["client"]["id"],
+      data["client"]["name"],
+      data["project"]["id"],
+      data["project"]["name"],
+      data["task"]["id"],
+      data["task"]["name"],
+      float(data["hours"]),
+      to_iso_date(data["spent_date"], data["started_time"]),
+      to_iso_date(data["spent_date"], data["ended_time"]),
+      data["notes"]
+    )
 
   async def __async_read_response__(self, response, url):
     """Reads the response, logging any json errors"""
@@ -163,4 +174,4 @@ class HarvestApiClient:
     try:
       return json.loads(text)
     except:
-      raise Exception(f'Failed to extract response json: {url}; {text}')
+      raise ApiError(f'Failed to extract response json: {url}; {text}')

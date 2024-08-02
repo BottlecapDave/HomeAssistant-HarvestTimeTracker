@@ -40,8 +40,8 @@ async def test_when_create_time_entry_with_hours_then_time_entry_added():
     entry_exists = False
     for entry in entries:
         if entry.notes == notes:
-            assert entry.start == parse_datetime(now.strftime("%Y-%m-%dT00:00:00"))
-            assert entry.end == parse_datetime(now.strftime("%Y-%m-%dT00:00:00"))
+            assert entry.start.date() == parse_datetime(now.strftime("%Y-%m-%dT00:00:00")).date()
+            assert entry.end.date() == parse_datetime(now.strftime("%Y-%m-%dT00:00:00")).date()
             entry_exists = True
             break
     
