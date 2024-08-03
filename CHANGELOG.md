@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.1.2...v1.2.0) (2024-08-03)
+
+
+### Bug Fixes
+
+* Fixed issue reading entries when company is configured to track via times (2 hours dev time) ([562dd41](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/562dd413072d0da85b609f7b0fb9a280ff680ff8))
+
+
+### Features
+
+* Added support for creating entries with start/end times (1.5 hours dev time) ([bf71f4c](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/bf71f4ca63306799c58c663152470d15d9b7e9ea))
+
 ## [1.1.2](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.1.1...v1.1.2) (2024-06-29)
 
 
