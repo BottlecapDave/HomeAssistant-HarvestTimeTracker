@@ -28,6 +28,13 @@
     "error": {}
   },
   "issues": {
-    
+  },
+  "exceptions": {
+    "create_time_entry_with_start_end_times_not_supported": {
+      "message": "Este serviço está disponível apenas onde sua empresa rastreia entradas por horário de início/término"
+    },
+    "create_time_entry_with_hours_not_supported": {
+      "message": "Este serviço está disponível apenas onde sua empresa rastreia entradas por horas"
+    }
   }
 }

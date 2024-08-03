@@ -46,6 +46,24 @@ async def async_setup_entry(hass, entry, async_add_entities):
     "async_add_time_with_hours",
   )
 
+  platform.async_register_entity_service(
+    "add_time_with_start_end_times",
+    vol.All(
+      vol.Schema(
+        {
+          vol.Required("project_id"): cv.positive_int,
+          vol.Required("task_id"): cv.positive_int,
+          vol.Required("date"): cv.string,
+          vol.Required("start_time"): cv.string,
+          vol.Required("end_time"): cv.string,
+          vol.Optional("notes"): cv.string,
+        },
+        extra=vol.ALLOW_EXTRA,
+      ),
+    ),
+    "async_add_time_with_start_end_times",
+  )
+
 async def async_setup_default_sensors(hass: HomeAssistant, entry, async_add_entities):
   config = dict(entry.data)
 
