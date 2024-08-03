@@ -16,7 +16,7 @@ from homeassistant.util.dt import (now)
 
 from ..api_client import HarvestApiClient
 
-from . import async_create_time_entry_with_hours, get_todays_hours
+from . import async_create_time_entry_with_hours, async_create_time_entry_with_start_end_times, get_todays_hours
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -125,6 +125,12 @@ class HarvestDefaultTask(SelectEntity, RestoreEntity):
 
   @callback
   async def async_add_time_with_hours(self, project_id: int, task_id: int, date: str, hours: str, notes: str = None):
-    """Create time entry"""
+    """Create time entry with hours"""
 
     await async_create_time_entry_with_hours(self._client, project_id, task_id, date, hours, notes)
+
+  @callback
+  async def async_add_time_with_start_end_times(self, project_id: int, task_id: int, date: str, start_time: str, end_time: str, notes: str = None):
+    """Create time entry with start/end times"""
+
+    await async_create_time_entry_with_start_end_times(self._client, project_id, task_id, date, start_time, end_time, notes)

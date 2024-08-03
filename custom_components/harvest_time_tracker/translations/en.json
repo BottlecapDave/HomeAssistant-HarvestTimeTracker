@@ -28,6 +28,13 @@
     "error": {}
   },
   "issues": {
-    
+  },
+  "exceptions": {
+    "create_time_entry_with_start_end_times_not_supported": {
+      "message": "This service is only available where your company tracks entries by start/end times"
+    },
+    "create_time_entry_with_hours_not_supported": {
+      "message": "This service is only available where your company tracks entries by hours"
+    }
   }
 }

@@ -2,7 +2,7 @@ pytest
 pytest-socket
 pytest-asyncio
 mock
-homeassistant
+homeassistant==2023.12.0
 psutil-home-assistant
 sqlalchemy
 fnvhash

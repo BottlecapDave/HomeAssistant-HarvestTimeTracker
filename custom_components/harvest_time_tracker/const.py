@@ -23,4 +23,5 @@ DATA_SCHEMA_ACCOUNT = vol.Schema({
 })
 
 REGEX_DATE = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+REGEX_TIME_WITH_SECONDS = "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
 REGEX_HOURS = "^[0-9]+(\\.[0-9]+)*$"

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class TimeEntry:
   id: str
   client_id: int
@@ -7,8 +9,8 @@ class TimeEntry:
   task_id: int
   task_name: str
   hours: float
-  start: str
-  end: str
+  start: datetime
+  end: datetime
   notes: str
 
   def __init__(self,
@@ -20,8 +22,8 @@ class TimeEntry:
                task_id: int,
                task_name: str,
                hours: float,
-               start: str,
-               end: str,
+               start: datetime,
+               end: datetime,
                notes: str
   ):
     self.id = id

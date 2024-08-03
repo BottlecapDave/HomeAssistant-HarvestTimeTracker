@@ -1,6 +1,6 @@
 add_time_with_hours:
   name: Add time with hours
-  description: Adds a new time entry specified with hours.
+  description: Adds a new time entry specified with hours. You should only use this method to create time entries when your account is configured to track time via duration.
   target:
     entity:
       integration: harvest_time_tracker
@@ -35,6 +35,53 @@ add_time_with_hours:
           max: 24
           step: 0.01
           mode: box
+    notes:
+      name: Notes
+      description: Any notes you want to attach to the entry.
+      required: false
+      selector:
+        text:
+
+add_time_with_start_end_times:
+  name: Add time with start/end times
+  description: Adds a new time entry specified with start/end times. You should only use this method to create time entries when your account is configured to track time via start and end time.
+  target:
+    entity:
+      integration: harvest_time_tracker
+      domain: sensor
+  fields:
+    project_id:
+      name: Project Id
+      description: The id of the project the time should be logged against.
+      required: true
+      selector:
+        text:
+    task_id:
+      name: Task Id
+      description: The id of the task the time should be logged against.
+      required: true
+      selector:
+        text:
+    date:
+      name: Date
+      description: The date the time should be logged on.
+      required: true
+      selector:
+        date:
+    start_time:
+      name: Start time
+      description: The time the entry started.
+      required: true
+      example: '10:00'
+      selector:
+        time:
+    end_time:
+      name: End time
+      description: The time the entry ended.
+      required: true
+      example: '20:00'
+      selector:
+        time:
     notes:
       name: Notes
       description: Any notes you want to attach to the entry.
