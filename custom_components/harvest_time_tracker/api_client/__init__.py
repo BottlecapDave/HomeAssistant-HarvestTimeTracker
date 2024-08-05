@@ -18,9 +18,9 @@ class ServerError(ApiError): ...
 
 class RequestError(ApiError): ...
 
-REGEX_TIME = "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
+REGEX_TIME = "^(0?[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
 
-def to_iso_date(date, time):
+def to_iso_date(date: str | None, time: str | None):
   if date is None:
     return None
   
@@ -215,6 +215,8 @@ class HarvestApiClient:
         _LOGGER.debug(msg)
         raise RequestError(msg)
       return None
+    
+    _LOGGER.debug(f'url: {url}; response: {text}')
 
     try:
       return json.loads(text)
