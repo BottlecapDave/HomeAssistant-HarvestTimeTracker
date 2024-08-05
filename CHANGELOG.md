@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.2.0...v1.2.1) (2024-08-05)
+
+
+### Bug Fixes
+
+* Fixed issue with 24 hour clock not having proceeding zero (15 minutes dev time) ([d7d7203](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/d7d72033773588f8ac5700c9a414914cc435cfea))
+
 # [1.2.0](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.1.2...v1.2.0) (2024-08-03)
 
 
