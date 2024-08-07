@@ -93,7 +93,7 @@ def get_todays_hours(today: datetime, entries: list) -> HoursResult:
 
   if entries is not None:
     today_start = today.replace(hour=0, minute=0, second=0, microsecond=0)
-    today_end = (today + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    today_end = today_start + timedelta(days=1)
     for entry in entries:
       entry_start = as_utc(entry.start)
       entry_end = as_utc(entry.end)

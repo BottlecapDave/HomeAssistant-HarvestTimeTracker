@@ -31,6 +31,20 @@ body:
     validations:
       required: true
   - type: input
+    id: user-timezone-version
+    attributes:
+      label: Your Timezone
+      description: The timezone your HA instance resides in
+    validations:
+      required: true
+  - type: input
+    id: company-timezone-version
+    attributes:
+      label: Company Timezone
+      description: The timezone the company you're adding is associated with
+    validations:
+      required: true
+  - type: input
     id: integration-version
     attributes:
       label: Integration Version

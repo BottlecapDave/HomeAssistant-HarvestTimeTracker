@@ -1,9 +1,11 @@
 import logging
-import asyncio
 
 from homeassistant.exceptions import ConfigEntryNotReady
 
 from .const import (
+  CONFIG_MAIN_USER_ID,
+  CONFIG_VERSION,
+  DATA_USER_ID,
   DOMAIN,
 
   CONFIG_MAIN_API_KEY,
@@ -15,12 +17,31 @@ from .const import (
 )
 
 from .api_client import HarvestApiClient
-
+from .config.main import async_migrate_main_config
 from .coordinators.time_entries import async_setup_time_entries_coordinator
 
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS = ["sensor", "select"]
+
+async def async_migrate_entry(hass, config_entry):
+  """Migrate old entry."""
+  if (config_entry.version < CONFIG_VERSION):
+    _LOGGER.debug("Migrating from version %s", config_entry.version)
+
+    new_data = None
+    new_options = None
+    title = config_entry.title
+    if CONFIG_MAIN_API_KEY in config_entry.data:
+      new_data = await async_migrate_main_config(config_entry.version, config_entry.data)
+      new_options = {**config_entry.options}
+    
+    config_entry.version = CONFIG_VERSION
+    hass.config_entries.async_update_entry(config_entry, title=title, data=new_data, options=new_options)
+
+    _LOGGER.debug("Migration to version %s successful", config_entry.version)
+
+  return True
 
 async def async_setup_entry(hass, entry):
   """This is called from the config flow."""
@@ -55,10 +76,16 @@ async def async_setup_dependencies(hass, config):
   if account_id not in hass.data[DOMAIN]:
     hass.data[DOMAIN][account_id] = dict({})
 
-  hass.data[DOMAIN][account_id][DATA_API_CLIENT] = HarvestApiClient(api_key, account_id)
-  hass.data[DOMAIN][account_id][DATA_WEEK_START] = config[CONFIG_MAIN_WEEK_START]
+  api_client = HarvestApiClient(api_key, account_id)
+  hass.data[DOMAIN][account_id][DATA_API_CLIENT] = api_client
 
-  await async_setup_time_entries_coordinator(hass, hass.data[DOMAIN][account_id][DATA_API_CLIENT], account_id)
+  week_start = config[CONFIG_MAIN_WEEK_START]
+  hass.data[DOMAIN][account_id][DATA_WEEK_START] = week_start
+
+  user_id = config[CONFIG_MAIN_USER_ID]
+  hass.data[DOMAIN][account_id][DATA_USER_ID] = week_start
+
+  await async_setup_time_entries_coordinator(hass, api_client, account_id, user_id, week_start)
 
 
 async def options_update_listener(hass, entry):

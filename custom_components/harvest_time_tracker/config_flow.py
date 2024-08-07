@@ -6,6 +6,8 @@ from homeassistant.core import callback
 import homeassistant.helpers.config_validation as cv
 
 from .const import (
+  CONFIG_MAIN_USER_ID,
+  CONFIG_VERSION,
   DOMAIN,
   
   CONFIG_MAIN_API_KEY,
@@ -22,19 +24,25 @@ _LOGGER = logging.getLogger(__name__)
 class HarvestTimeTrackerConfigFlow(ConfigFlow, domain=DOMAIN): 
   """Config flow."""
 
-  VERSION = 1
+  VERSION = CONFIG_VERSION
 
   async def async_setup_initial_account(self, user_input):
     """Setup the initial account based on the provided user input"""
     errors = {}
 
-    # client = HarvestApiClient(user_input[CONFIG_MAIN_API_KEY], user_input[CONFIG_MAIN_ACCOUNT_ID])
-    # account_info = await client.async_get_account(user_input[CONFIG_MAIN_ACCOUNT_ID])
-    # if (account_info is None):
-    #   errors[CONFIG_MAIN_ACCOUNT_ID] = "account_not_found"
-    #   return self.async_show_form(
-    #     step_id="user", data_schema=DATA_SCHEMA_ACCOUNT, errors=errors
-    #   )
+    client = HarvestApiClient(user_input[CONFIG_MAIN_API_KEY], user_input[CONFIG_MAIN_ACCOUNT_ID])
+    user = await client.async_get_current_user()
+    if (user is None):
+      errors[CONFIG_MAIN_API_KEY] = "user_not_found"
+    else:
+      user_input[CONFIG_MAIN_USER_ID] = user.id
+
+    if len(errors) > 0:
+      return self.async_show_form(
+        step_id="user",
+        data_schema=DATA_SCHEMA_ACCOUNT,
+        errors=errors
+      )
 
     # Setup our basic sensors
     return self.async_create_entry(

@@ -3,12 +3,17 @@ import homeassistant.helpers.config_validation as cv
 
 DOMAIN = "harvest_time_tracker"
 
+CONFIG_VERSION = 2
+CONFIG_KIND = "kind"
+CONFIG_KIND_ACCOUNT = "account"
 CONFIG_MAIN_API_KEY = "api_key"
 CONFIG_MAIN_ACCOUNT_ID = "account_id"
+CONFIG_MAIN_USER_ID = "user_id"
 CONFIG_MAIN_WEEK_START = "week_start"
 
 DATA_API_CLIENT = "api_client"
 DATA_WEEK_START = "week_start"
+DATA_USER_ID = "user_id"
 
 DATA_TIME_ENTRIES_COORDINATOR = "time_entries_coordinator"
 

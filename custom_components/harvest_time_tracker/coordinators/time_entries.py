@@ -19,7 +19,7 @@ from . import calculate_week_start
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_time_entries_coordinator(hass, client: HarvestApiClient, account_id: str):
+async def async_setup_time_entries_coordinator(hass, client: HarvestApiClient, account_id: str, user_id: str, week_start: str):
   """Create time entries coordinator"""
 
   async def async_update_data():
@@ -27,11 +27,11 @@ async def async_setup_time_entries_coordinator(hass, client: HarvestApiClient, a
     current = utcnow()
     
     key = 'time_entries'
-    period_from = calculate_week_start(current, hass.data[DOMAIN][account_id][DATA_WEEK_START] )
+    period_from = calculate_week_start(current, week_start)
     period_to = (period_from + timedelta(weeks=1))
 
     try:
-      hass.data[DOMAIN][account_id][key] = await client.async_get_time_entries(period_from, period_to)
+      hass.data[DOMAIN][account_id][key] = await client.async_get_time_entries(user_id, period_from, period_to)
     except:
       _LOGGER.debug('Failed to retrieve time entries')
 

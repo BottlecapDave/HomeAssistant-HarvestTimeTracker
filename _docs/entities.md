@@ -6,7 +6,7 @@ The following entities are available when setting up your account.
 
 `sensor.harvest_time_tracker_{ACCOUNT_ID}_hours_today`
 
-This sensor will present the total hours for today.
+This sensor will present the total hours for today for the user associated with the configured API key.
 
 | Attribute Name | type | Note |
 |----------------|------|------|
@@ -33,7 +33,7 @@ Each entry has the following attributes
 
 `sensor.harvest_time_tracker_{ACCOUNT_ID}_hours_week`
 
-This sensor will present the total hours for the week, starting from the day you elected as your week start.
+This sensor will present the total hours for the week for the user associated with the configured API key. The week will start from the day you elected as your week start when configuring the integration.
 
 | Attribute Name | type | Note |
 |----------------|------|------|
