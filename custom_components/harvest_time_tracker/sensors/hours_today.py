@@ -28,6 +28,8 @@ _LOGGER = logging.getLogger(__name__)
 class HarvestHoursToday(CoordinatorEntity, SensorEntity, RestoreEntity):
   """Sensor for determining the total hours from today"""
 
+  _unrecorded_attributes = frozenset({"entries"})
+
   def __init__(self, hass: HomeAssistant, coordinator, account_id: str, client: HarvestApiClient):
     """Init sensor."""
 
