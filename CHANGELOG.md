@@ -1,3 +1,11 @@
+## [1.2.2](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.2.1...v1.2.2) (2024-08-07)
+
+
+### Bug Fixes
+
+* Fixed sensors displaying other users entries if the user has an admin or manager role (1.5 hours dev time) ([de7adfd](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/de7adfd3af031f55ae37beca86029871188f14a5))
+* Removed entries from being saved in database due to size. They're still available in the UI and with automations ([b7f465e](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/b7f465e019eefb34d8f239193c71ccd06b04611c))
+
 ## [1.2.1](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.2.0...v1.2.1) (2024-08-05)
 
 
