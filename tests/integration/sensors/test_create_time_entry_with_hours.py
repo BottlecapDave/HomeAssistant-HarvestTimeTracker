@@ -37,7 +37,7 @@ async def test_when_create_time_entry_with_hours_then_time_entry_added():
     # Assert
     period_from = utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
     period_to = period_from + timedelta(days=1)
-    entries = await client.async_get_time_entries(period_from, period_to)
+    entries = await client.async_get_time_entries(context.user_id, period_from, period_to)
 
     assert entries is not None
     assert len(entries) >= 1

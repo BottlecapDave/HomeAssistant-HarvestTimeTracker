@@ -9,6 +9,7 @@ from homeassistant.util.dt import (parse_datetime)
 from .time_entry import TimeEntry
 from .task import Task
 from .company import Company
+from .user import User
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -49,8 +50,23 @@ class HarvestApiClient:
     self._account_id = account_id
     self._base_url = 'https://api.harvestapp.com'
 
+  async def async_get_current_user(self) -> User | None:
+    """Get the current user"""
+    async with aiohttp.ClientSession() as client:
+      headers = { "Authorization": f"Bearer {self._api_key}", "Harvest-Account-Id": self._account_id }
+      url = f'{self._base_url}/v2/users/me'
+      async with client.get(url, headers=headers) as response:
+        data = await self.__async_read_response__(response, url)
+        if data is not None:
+          try:
+            user_id = data["id"]
+            return User(f"{user_id}")
+          except:
+            _LOGGER.debug(f'Failed to transform data: {data}')
+            raise
+
   async def async_get_company(self) -> Company | None:
-    """Create an entry by hours"""
+    """Get the company the user is associated with"""
     async with aiohttp.ClientSession() as client:
       headers = { "Authorization": f"Bearer {self._api_key}", "Harvest-Account-Id": self._account_id }
       url = f'{self._base_url}/v2/company'
@@ -63,7 +79,7 @@ class HarvestApiClient:
             _LOGGER.debug(f'Failed to transform data: {data}')
             raise
   
-  async def async_get_time_entries(self, period_from: datetime, period_to: datetime) -> list[TimeEntry]:
+  async def async_get_time_entries(self, user_id: str, period_from: datetime, period_to: datetime) -> list[TimeEntry]:
     """Get all time entries"""
     page = 1
     has_next_page = True
@@ -72,7 +88,7 @@ class HarvestApiClient:
     while (has_next_page):
       async with aiohttp.ClientSession() as client:
         headers = { "Authorization": f"Bearer {self._api_key}", "Harvest-Account-Id": self._account_id }
-        url = f'{self._base_url}/v2/time_entries?from={period_from.strftime("%Y-%m-%dT%H:%M:%SZ")}&to={period_to.strftime("%Y-%m-%dT%H:%M:%SZ")}&page={page}'
+        url = f'{self._base_url}/v2/time_entries?user_id={user_id}&from={period_from.strftime("%Y-%m-%dT%H:%M:%SZ")}&to={period_to.strftime("%Y-%m-%dT%H:%M:%SZ")}&page={page}'
         async with client.get(url, headers=headers) as response:
           data = await self.__async_read_response__(response, url)
           if data is not None:
@@ -186,6 +202,7 @@ class HarvestApiClient:
             raise
 
   def __to_time_entry(self, data):
+    user_id = data["user"]["id"]
     return TimeEntry(
       data["id"],
       data["client"]["id"],
@@ -197,7 +214,8 @@ class HarvestApiClient:
       float(data["hours"]),
       to_iso_date(data["spent_date"], data["started_time"]),
       to_iso_date(data["spent_date"], data["ended_time"]),
-      data["notes"]
+      data["notes"],
+      f"{user_id}"
     )
 
   async def __async_read_response__(self, response, url):

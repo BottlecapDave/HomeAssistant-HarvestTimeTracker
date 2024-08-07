@@ -11,7 +11,9 @@
         }
       }
     },
-    "error": {}
+    "error": {
+      "user_not_found": "Failed to find the current user"
+    }
   },
   "options": {
     "step": {
@@ -25,7 +27,9 @@
         }
       }
     },
-    "error": {}
+    "error": {
+      "user_not_found": "Failed to find the current user"
+    }
   },
   "issues": {
   },

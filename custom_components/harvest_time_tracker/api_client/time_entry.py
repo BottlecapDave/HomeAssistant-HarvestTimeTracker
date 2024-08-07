@@ -1,18 +1,6 @@
 from datetime import datetime
 
 class TimeEntry:
-  id: str
-  client_id: int
-  client_name: str
-  project_id: int
-  project_name: str
-  task_id: int
-  task_name: str
-  hours: float
-  start: datetime
-  end: datetime
-  notes: str
-
   def __init__(self,
                id: str,
                client_id: int,
@@ -24,7 +12,8 @@ class TimeEntry:
                hours: float,
                start: datetime,
                end: datetime,
-               notes: str
+               notes: str,
+               user_id: str
   ):
     self.id = id
     self.client_id = client_id
@@ -37,6 +26,7 @@ class TimeEntry:
     self.start = start
     self.end = end
     self.notes = notes
+    self.user_id = user_id
 
   def to_json(self):
     return {
