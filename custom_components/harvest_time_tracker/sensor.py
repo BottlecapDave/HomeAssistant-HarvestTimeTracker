@@ -32,7 +32,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
   platform.async_register_entity_service(
     "add_time_with_hours",
     vol.All(
-      vol.Schema(
+      cv.make_entity_service_schema(
         {
           vol.Required("project_id"): cv.positive_int,
           vol.Required("task_id"): cv.positive_int,
@@ -49,7 +49,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
   platform.async_register_entity_service(
     "add_time_with_start_end_times",
     vol.All(
-      vol.Schema(
+      cv.make_entity_service_schema(
         {
           vol.Required("project_id"): cv.positive_int,
           vol.Required("task_id"): cv.positive_int,
