@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.2.2...v1.2.3) (2024-09-22)
+
+
+### Bug Fixes
+
+* Fixed HA warning for registering an entity service with a non entity service schema (15 minutes dev time) ([3657a90](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/3657a9093ad08ed482a03289b38b0fcd09bffe00))
+
 ## [1.2.2](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.2.1...v1.2.2) (2024-08-07)
 
 
