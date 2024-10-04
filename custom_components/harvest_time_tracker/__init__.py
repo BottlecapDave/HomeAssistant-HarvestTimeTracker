@@ -36,8 +36,7 @@ async def async_migrate_entry(hass, config_entry):
       new_data = await async_migrate_main_config(config_entry.version, config_entry.data)
       new_options = {**config_entry.options}
     
-    config_entry.version = CONFIG_VERSION
-    hass.config_entries.async_update_entry(config_entry, title=title, data=new_data, options=new_options)
+    hass.config_entries.async_update_entry(config_entry, title=title, data=new_data, options=new_options, version=CONFIG_VERSION)
 
     _LOGGER.debug("Migration to version %s successful", config_entry.version)
 
