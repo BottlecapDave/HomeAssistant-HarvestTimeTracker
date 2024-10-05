@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.2.3...v1.2.4) (2024-10-05)
+
+
+### Bug Fixes
+
+* Fixed issue with migrating config entries from older versions of the integration ([b63e9c5](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/b63e9c5f4058f3775a0ce7448f95e5389f7c635c))
+
 ## [1.2.3](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.2.2...v1.2.3) (2024-09-22)
 
 
