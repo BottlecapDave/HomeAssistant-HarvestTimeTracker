@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.27">
     
     
       
@@ -365,6 +365,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tasks
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -385,6 +394,46 @@
   
   <span class="md-ellipsis">
     Services
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../events/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Events
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blueprints/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blueprints
   </span>
   
 
@@ -486,6 +535,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tasks
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -507,7 +565,7 @@
 <h1 id="entities">Entities<a class="headerlink" href="#entities" title="Permanent link">#</a></h1>
 <p>The following entities are available when setting up your account.</p>
 <h2 id="daily-hours">Daily Hours<a class="headerlink" href="#daily-hours" title="Permanent link">#</a></h2>
-<p><code>sensor.harvest_time_tracker_{ACCOUNT_ID}_hours_today</code></p>
+<p><code>sensor.harvest_time_tracker_{ACCOUNT_ID/NAME}_hours_today</code></p>
 <p>This sensor will present the total hours for today for the user associated with the configured API key.</p>
 <table>
 <thead>
@@ -598,7 +656,7 @@
 </tbody>
 </table>
 <h2 id="weekly-hours">Weekly Hours<a class="headerlink" href="#weekly-hours" title="Permanent link">#</a></h2>
-<p><code>sensor.harvest_time_tracker_{ACCOUNT_ID}_hours_week</code></p>
+<p><code>sensor.harvest_time_tracker_{ACCOUNT_ID/NAME}_hours_week</code></p>
 <p>This sensor will present the total hours for the week for the user associated with the configured API key. The week will start from the day you elected as your week start when configuring the integration.</p>
 <table>
 <thead>
@@ -689,8 +747,8 @@
 </tbody>
 </table>
 <h2 id="default-task">Default Task<a class="headerlink" href="#default-task" title="Permanent link">#</a></h2>
-<p><code>select.harvest_time_tracker_{ACCOUNT_ID}_default_task</code></p>
-<p>This select sensor is used to see all of your assigned tasks and select one which can be used as a default in automations (see <a href="../services/#service-harvest_time_trackeradd_time_with_hours">service example</a>).</p>
+<p><code>select.harvest_time_tracker_{ACCOUNT_ID/NAME}_default_task</code></p>
+<p>This select sensor is used to select a default assigned task which can then be used in automations (see <a href="../services/#harvest_time_trackeradd_time_with_hours">service example</a>).</p>
 <table>
 <thead>
 <tr>
@@ -734,6 +792,72 @@
 <td><code>task_name</code></td>
 <td><code>string</code></td>
 <td>The name of the selected task</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">#</a></h2>
+<p><code>event.harvest_time_tracker_{ACCOUNT_ID/NAME}_tasks</code></p>
+<p>This event sensor is used to see all of your assigned tasks and when they were last updated.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute Name</th>
+<th>type</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>account_id</code></td>
+<td><code>string</code></td>
+<td>The id of the account this sensor is for</td>
+</tr>
+<tr>
+<td><code>tasks</code></td>
+<td><code>list</code></td>
+<td>The list of tasks assigned to the user</td>
+</tr>
+</tbody>
+</table>
+<p>For each task, the following attributes are available</p>
+<table>
+<thead>
+<tr>
+<th>Attribute Name</th>
+<th>type</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td><code>string</code></td>
+<td>The id of the task</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>string</code></td>
+<td>The name of the task</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>string</code></td>
+<td>The id of the project the task belongs to</td>
+</tr>
+<tr>
+<td><code>project_name</code></td>
+<td><code>string</code></td>
+<td>The name of the project the task belongs to</td>
+</tr>
+<tr>
+<td><code>client_id</code></td>
+<td><code>string</code></td>
+<td>The id of the client the task belongs to</td>
+</tr>
+<tr>
+<td><code>client_name</code></td>
+<td><code>string</code></td>
+<td>The name of the client the task belongs to</td>
 </tr>
 </tbody>
 </table>

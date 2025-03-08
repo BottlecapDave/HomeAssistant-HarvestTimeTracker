@@ -12,11 +12,11 @@
         <link rel="prev" href="../entities/">
       
       
-        <link rel="next" href="../faq/">
+        <link rel="next" href="../events/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.27">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.27">
     
     
       
@@ -359,13 +359,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#add_time_with_hours" class="md-nav__link">
+  <a href="#harvest_time_trackeradd_time_with_hours" class="md-nav__link">
     <span class="md-ellipsis">
-      add_time_with_hours
+      harvest_time_tracker.add_time_with_hours
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="add_time_with_hours">
+    <nav class="md-nav" aria-label="harvest_time_tracker.add_time_with_hours">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -383,13 +383,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#add_time_with_start_end_times" class="md-nav__link">
+  <a href="#harvest_time_trackeradd_time_with_start_end_times" class="md-nav__link">
     <span class="md-ellipsis">
-      add_time_with_start_end_times
+      harvest_time_tracker.add_time_with_start_end_times
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="add_time_with_start_end_times">
+    <nav class="md-nav" aria-label="harvest_time_tracker.add_time_with_start_end_times">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -410,6 +410,46 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../events/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Events
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../blueprints/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blueprints
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -481,13 +521,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#add_time_with_hours" class="md-nav__link">
+  <a href="#harvest_time_trackeradd_time_with_hours" class="md-nav__link">
     <span class="md-ellipsis">
-      add_time_with_hours
+      harvest_time_tracker.add_time_with_hours
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="add_time_with_hours">
+    <nav class="md-nav" aria-label="harvest_time_tracker.add_time_with_hours">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -505,13 +545,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#add_time_with_start_end_times" class="md-nav__link">
+  <a href="#harvest_time_trackeradd_time_with_start_end_times" class="md-nav__link">
     <span class="md-ellipsis">
-      add_time_with_start_end_times
+      harvest_time_tracker.add_time_with_start_end_times
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="add_time_with_start_end_times">
+    <nav class="md-nav" aria-label="harvest_time_tracker.add_time_with_start_end_times">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -547,7 +587,7 @@
 
 
 <h1 id="services">Services<a class="headerlink" href="#services" title="Permanent link">#</a></h1>
-<h2 id="add_time_with_hours">add_time_with_hours<a class="headerlink" href="#add_time_with_hours" title="Permanent link">#</a></h2>
+<h2 id="harvest_time_trackeradd_time_with_hours">harvest_time_tracker.add_time_with_hours<a class="headerlink" href="#harvest_time_trackeradd_time_with_hours" title="Permanent link">#</a></h2>
 <p>Adds a new time entry specified with hours. You should only use this method to create time entries when your account is configured to track time via duration.</p>
 <table>
 <thead>
@@ -592,6 +632,10 @@
 </table>
 <h3 id="automation-example">Automation Example<a class="headerlink" href="#automation-example" title="Permanent link">#</a></h3>
 <p>Below is an example of adding an entry to a specific task when a calendar event with certain text ends. The entry has the hours of the calendar event. If the calendar entry is for something else, we add an entry to our elected default task.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>If you're feeling adventurous, you could use a <a href="../blueprints/#add-hour-based-entries-based-on-calendar-entries-using-ai">blueprint</a> which adds entries automatically based on calendar entries utilising AI.</p>
+</div>
 <div class="highlight"><pre><span></span><code><span class="nt">automations</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Work - Timesheet</span>
 <span class="w">    </span><span class="nt">trigger</span><span class="p">:</span>
@@ -637,7 +681,7 @@
 <span class="w">          </span><span class="nt">target</span><span class="p">:</span>
 <span class="w">            </span><span class="nt">entity_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensor.harvest_time_tracker_XXX_hours_today</span>
 </code></pre></div>
-<h2 id="add_time_with_start_end_times">add_time_with_start_end_times<a class="headerlink" href="#add_time_with_start_end_times" title="Permanent link">#</a></h2>
+<h2 id="harvest_time_trackeradd_time_with_start_end_times">harvest_time_tracker.add_time_with_start_end_times<a class="headerlink" href="#harvest_time_trackeradd_time_with_start_end_times" title="Permanent link">#</a></h2>
 <p>Adds a new time entry specified with start/end times. You should only use this method to create time entries when your account is configured to track time via start and end time.</p>
 <table>
 <thead>
