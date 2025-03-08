@@ -2,6 +2,7 @@ import voluptuous as vol
 import homeassistant.helpers.config_validation as cv
 
 DOMAIN = "harvest_time_tracker"
+INTEGRATION_VERSION = "1.2.3"
 
 CONFIG_VERSION = 2
 CONFIG_KIND = "kind"
