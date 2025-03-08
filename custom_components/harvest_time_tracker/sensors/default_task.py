@@ -15,6 +15,7 @@ from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.util.dt import (now)
 
 from ..api_client import HarvestApiClient
+from ..const import EVENT_TASKS_UPDATED
 
 from . import async_create_time_entry_with_hours, async_create_time_entry_with_start_end_times, get_todays_hours
 
@@ -34,6 +35,7 @@ class HarvestDefaultTask(SelectEntity, RestoreEntity):
     self._account_id = account_id
     self._account_name = account_name
     self._client = client
+    self._hass = hass
 
     self.entity_id = generate_entity_id("select.{}", self.unique_id, hass=hass)
     self._options = {}
@@ -85,6 +87,11 @@ class HarvestDefaultTask(SelectEntity, RestoreEntity):
     new_options = {}
     for task in tasks:
       new_options[f'{task.client_name}->{task.project_name}->{task.name}'] = task.to_json()
+
+    self._hass.bus.async_fire(EVENT_TASKS_UPDATED, {
+      "account_id": self._account_id,
+      "tasks": list(map(lambda x: x.to_json(), tasks))
+    })
 
     self._options = new_options
   
