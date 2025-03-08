@@ -76,7 +76,7 @@ This select sensor is used to select a default assigned task which can then be u
 
 `event.harvest_time_tracker_{ACCOUNT_ID/NAME}_tasks`
 
-This event sensor is used to see all of your assigned tasks and select one which can be used as a default in automations (see [service example](./services.md#service-harvest_time_trackeradd_time_with_hours)).
+This event sensor is used to see all of your assigned tasks and when they were last updated.
 
 | Attribute Name | type | Note |
 |----------------|------|------|

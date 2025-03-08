@@ -6,6 +6,6 @@
 
 ### Add hour based entries based on calendar entries using AI
 
-[Install blueprint](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2FBottlecapDave%2FHomeAssistant-HarvestTimeTracker%2Fblob%2Fdevelop%2F_docs%2Fblueprints%2Fharvest_time_tracker_calendar_entry_hours.yml) | [Source](./blueprints/harvest_time_tracker_calendar_entry_hours.yml)
+[Install blueprint](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2FBottlecapDave%2FHomeAssistant-HarvestTimeTracker%2Fblob%2Fmaster%2F_docs%2Fblueprints%2Fharvest_time_tracker_calendar_entry_hours.yaml) | [Source](./blueprints/harvest_time_tracker_calendar_entry_hours.yaml)
 
 This blueprint will automatically adds an entry to a correct task, based on AI, when a calendar entry ends based on the calendar summary. Because this is using AI, it might not pick the best option. This has been tested with ChatGPT.
