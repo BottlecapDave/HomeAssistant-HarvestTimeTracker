@@ -7,6 +7,7 @@ INTEGRATION_VERSION = "1.2.3"
 CONFIG_VERSION = 2
 CONFIG_KIND = "kind"
 CONFIG_KIND_ACCOUNT = "account"
+CONFIG_MAIN_NAME = "name"
 CONFIG_MAIN_API_KEY = "api_key"
 CONFIG_MAIN_ACCOUNT_ID = "account_id"
 CONFIG_MAIN_USER_ID = "user_id"
@@ -19,6 +20,7 @@ DATA_USER_ID = "user_id"
 DATA_TIME_ENTRIES_COORDINATOR = "time_entries_coordinator"
 
 DATA_SCHEMA_ACCOUNT = vol.Schema({
+  vol.Optional(CONFIG_MAIN_NAME): str,
   vol.Required(CONFIG_MAIN_API_KEY): str,
   vol.Required(CONFIG_MAIN_ACCOUNT_ID): str,
   vol.Required(CONFIG_MAIN_WEEK_START): vol.In({

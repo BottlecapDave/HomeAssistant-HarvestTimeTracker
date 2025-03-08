@@ -5,6 +5,7 @@
       "user": {
         "description": "Setup your basic account information - https://id.getharvest.com/developers",
         "data": {
+          "name": "Friendly account name",
           "api_key": "Personal Access Token",
           "account_id": "Account ID",
           "week_start": "The start of the week. This will be used for weekly counters"
@@ -12,7 +13,8 @@
       }
     },
     "error": {
-      "user_not_found": "Failed to find the current user"
+      "user_not_found": "Failed to find the current user",
+      "name_not_unique": "The optional name must be unique among all entries"
     }
   },
   "options": {
@@ -21,6 +23,7 @@
         "title": "Update Account Info",
         "description": "Update your basic account information - https://id.getharvest.com/developers",
         "data": {
+          "name": "Friendly account name",
           "api_key": "Personal Access Token",
           "account_id": "Account ID",
           "week_start": "The start of the week. This will be used for weekly counters"
@@ -28,7 +31,8 @@
       }
     },
     "error": {
-      "user_not_found": "Failed to find the current user"
+      "user_not_found": "Failed to find the current user",
+      "name_not_unique": "The optional name must be unique among all entries"
     }
   },
   "issues": {

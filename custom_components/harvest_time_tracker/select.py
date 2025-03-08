@@ -7,6 +7,7 @@ from .sensors.hours_today import HarvestHoursToday
 from .sensors.hours_week import HarvestHoursWeek
 
 from .const import (
+  CONFIG_MAIN_NAME,
   DOMAIN,
   
   CONFIG_MAIN_API_KEY,
@@ -34,11 +35,12 @@ async def async_setup_default_sensors(hass: HomeAssistant, entry, async_add_enti
   if entry.options:
     config.update(entry.options)
 
-  account_id = entry.data[CONFIG_MAIN_ACCOUNT_ID]
+  account_id = config[CONFIG_MAIN_ACCOUNT_ID]
+  account_name = config[CONFIG_MAIN_NAME] if CONFIG_MAIN_NAME in config else None
   api_client = hass.data[DOMAIN][account_id][DATA_API_CLIENT]
   
   entities = [
-    HarvestDefaultTask(hass, account_id, api_client),
+    HarvestDefaultTask(hass, account_name, account_id, api_client),
   ]
 
   async_add_entities(entities, True)
