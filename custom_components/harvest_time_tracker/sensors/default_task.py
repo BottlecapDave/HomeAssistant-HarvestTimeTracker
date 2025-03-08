@@ -15,6 +15,7 @@ from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.util.dt import (now)
 
 from ..api_client import HarvestApiClient
+from ..const import EVENT_TASKS_UPDATED
 
 from . import async_create_time_entry_with_hours, async_create_time_entry_with_start_end_times, get_todays_hours
 
@@ -23,15 +24,18 @@ _LOGGER = logging.getLogger(__name__)
 class HarvestDefaultTask(SelectEntity, RestoreEntity):
   """Sensor for determining the default task"""
 
-  def __init__(self, hass: HomeAssistant, account_id: str, client: HarvestApiClient):
+  def __init__(self, hass: HomeAssistant, account_name: str, account_id: str, client: HarvestApiClient):
     """Init sensor."""
   
     self._state = None
     self._attributes = {
+      "account_name": account_name,
       "account_id": account_id
     }
     self._account_id = account_id
+    self._account_name = account_name
     self._client = client
+    self._hass = hass
 
     self.entity_id = generate_entity_id("select.{}", self.unique_id, hass=hass)
     self._options = {}
@@ -39,12 +43,12 @@ class HarvestDefaultTask(SelectEntity, RestoreEntity):
   @property
   def unique_id(self):
     """The id of the sensor."""
-    return f"harvest_time_tracker_{self._account_id}_default_task"
+    return f"harvest_time_tracker_{self._account_name if self._account_name is not None else self._account_id}_default_task"
     
   @property
   def name(self):
     """Name of the sensor."""
-    return f"Harvest Default Task ({self._account_id})"
+    return f"Harvest Default Task ({self._account_name if self._account_name is not None else self._account_id})"
 
   @property
   def icon(self):
@@ -83,6 +87,11 @@ class HarvestDefaultTask(SelectEntity, RestoreEntity):
     new_options = {}
     for task in tasks:
       new_options[f'{task.client_name}->{task.project_name}->{task.name}'] = task.to_json()
+
+    self._hass.bus.async_fire(EVENT_TASKS_UPDATED, {
+      "account_id": self._account_id,
+      "tasks": list(map(lambda x: x.to_json(), tasks))
+    })
 
     self._options = new_options
   

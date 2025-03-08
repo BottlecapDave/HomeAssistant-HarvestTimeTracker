@@ -22,7 +22,7 @@ from .coordinators.time_entries import async_setup_time_entries_coordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = ["sensor", "select"]
+PLATFORMS = ["sensor", "select", "event"]
 
 async def async_migrate_entry(hass, config_entry):
   """Migrate old entry."""

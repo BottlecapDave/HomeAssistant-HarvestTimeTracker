@@ -28,16 +28,18 @@ class HarvestHoursWeek(CoordinatorEntity, SensorEntity, RestoreEntity):
 
   _unrecorded_attributes = frozenset({"entries"})
 
-  def __init__(self, hass: HomeAssistant, coordinator, account_id: str, client: HarvestApiClient):
+  def __init__(self, hass: HomeAssistant, coordinator, account_name: str, account_id: str, client: HarvestApiClient):
     """Init sensor."""
 
     super().__init__(coordinator)
   
     self._state = None
     self._attributes = {
+      "account_name": account_name,
       "account_id": account_id
     }
     self._account_id = account_id
+    self._account_name = account_name
     self._client = client
 
     self.entity_id = generate_entity_id("sensor.{}", self.unique_id, hass=hass)
@@ -45,12 +47,12 @@ class HarvestHoursWeek(CoordinatorEntity, SensorEntity, RestoreEntity):
   @property
   def unique_id(self):
     """The id of the sensor."""
-    return f"harvest_time_tracker_{self._account_id}_hours_week"
+    return f"harvest_time_tracker_{self._account_name if self._account_name is not None else self._account_id}_hours_week"
     
   @property
   def name(self):
     """Name of the sensor."""
-    return f"Harvest Hours Week ({self._account_id})"
+    return f"Harvest Hours Week ({self._account_name if self._account_name is not None else self._account_id})"
 
   @property
   def icon(self):

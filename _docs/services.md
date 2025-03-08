@@ -1,6 +1,6 @@
 # Services
 
-## add_time_with_hours
+## harvest_time_tracker.add_time_with_hours
 
 Adds a new time entry specified with hours. You should only use this method to create time entries when your account is configured to track time via duration.
 
@@ -16,6 +16,10 @@ Adds a new time entry specified with hours. You should only use this method to c
 ### Automation Example
 
 Below is an example of adding an entry to a specific task when a calendar event with certain text ends. The entry has the hours of the calendar event. If the calendar entry is for something else, we add an entry to our elected default task.
+
+!!! info
+
+    If you're feeling adventurous, you could use a [blueprint](./blueprints.md#add-hour-based-entries-based-on-calendar-entries-using-ai) which adds entries automatically based on calendar entries utilising AI.
 
 ```yaml
 automations:
@@ -64,7 +68,7 @@ automations:
             entity_id: sensor.harvest_time_tracker_XXX_hours_today
 ```
 
-## add_time_with_start_end_times
+## harvest_time_tracker.add_time_with_start_end_times
 
 Adds a new time entry specified with start/end times. You should only use this method to create time entries when your account is configured to track time via start and end time.
 

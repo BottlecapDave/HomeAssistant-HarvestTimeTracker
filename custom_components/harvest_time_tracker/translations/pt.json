@@ -5,6 +5,7 @@
       "user": {
         "description": "Configurar as tuas informações sobre a tua conta - https://id.getharvest.com/developers",
         "data": {
+          "name": "Nombre de cuenta amigable",
           "api_key": "Token de acesso pessoal",
           "account_id": "Identificador de conta",
           "week_start": "O início da semana. Isso será usado para contadores semanais"
@@ -12,7 +13,8 @@
       }
     },
     "error": {
-      "user_not_found": "Falha ao encontrar o usuário atual"
+      "user_not_found": "Falha ao encontrar o usuário atual",
+      "name_not_unique": "El nombre opcional debe ser único entre todas las entradas."
     }
   },
   "options": {
@@ -21,6 +23,7 @@
         "title": "Atualizar informações de conta",
         "description": "Atualizar as tuas informações - https://id.getharvest.com/developers",
         "data": {
+          "name": "Nombre de cuenta amigable",
           "api_key": "Token de acesso pessoal",
           "account_id": "Identificador de conta",
           "week_start": "O início da semana. Isso será usado para contadores semanais"
@@ -28,7 +31,8 @@
       }
     },
     "error": {
-      "user_not_found": "Falha ao encontrar o usuário atual"
+      "user_not_found": "Falha ao encontrar o usuário atual",
+      "name_not_unique": "El nombre opcional debe ser único entre todas las entradas."
     }
   },
   "issues": {

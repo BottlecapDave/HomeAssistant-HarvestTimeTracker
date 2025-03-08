@@ -4,6 +4,10 @@ Setup is done entirely via the [integration UI](https://my.home-assistant.io/red
 
 You can do this for as many accounts as you would like.
 
+## Name
+
+A friendly name to help identify the account. This is optional, and if not supplied the `account_id` will be used.
+
 ## Personal access token
 
 This can be obtained on the [Harvest website](https://id.getharvest.com/oauth2/access_tokens/new).

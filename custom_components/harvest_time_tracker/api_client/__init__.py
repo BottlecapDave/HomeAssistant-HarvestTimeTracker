@@ -10,6 +10,7 @@ from .time_entry import TimeEntry
 from .task import Task
 from .company import Company
 from .user import User
+from ..const import INTEGRATION_VERSION
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,6 +38,8 @@ def to_iso_date(date: str | None, time: str | None):
 
   return parse_datetime(f'{date}T{time_in_24_hours}:00')
 
+user_agent_value = "bottlecapdave-ha-harvest-time-tracker"
+
 class HarvestApiClient:
 
   def __init__(self, api_key, account_id):
@@ -49,6 +52,7 @@ class HarvestApiClient:
     self._api_key = api_key
     self._account_id = account_id
     self._base_url = 'https://api.harvestapp.com'
+    self._default_headers = { "user-agent": f'{user_agent_value}/{INTEGRATION_VERSION} (https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker)' }
 
   async def async_get_current_user(self) -> User | None:
     """Get the current user"""
