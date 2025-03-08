@@ -60,7 +60,7 @@ Each entry has the following attributes
 
 `select.harvest_time_tracker_{ACCOUNT_ID/NAME}_default_task`
 
-This select sensor is used to select a default assigned task which can then be used in automations (see [service example](./services.md#service-harvest_time_trackeradd_time_with_hours)).
+This select sensor is used to select a default assigned task which can then be used in automations (see [service example](./services.md#harvest_time_trackeradd_time_with_hours)).
 
 | Attribute Name | type | Note |
 |----------------|------|------|

@@ -1,6 +1,6 @@
 # Services
 
-## add_time_with_hours
+## harvest_time_tracker.add_time_with_hours
 
 Adds a new time entry specified with hours. You should only use this method to create time entries when your account is configured to track time via duration.
 
@@ -68,7 +68,7 @@ automations:
             entity_id: sensor.harvest_time_tracker_XXX_hours_today
 ```
 
-## add_time_with_start_end_times
+## harvest_time_tracker.add_time_with_start_end_times
 
 Adds a new time entry specified with start/end times. You should only use this method to create time entries when your account is configured to track time via start and end time.
 
