@@ -8,6 +8,7 @@ nav:
   - entities.md
   - services.md
   - events.md
+  - blueprints.md
   - faq.md
   - sponsorship.md
 
@@ -49,3 +50,16 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+
+strict: true
+
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    anchors: warn
+    absolute_links: warn
+    unrecognized_links: warn

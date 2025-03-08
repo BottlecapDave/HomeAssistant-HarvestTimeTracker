@@ -16,6 +16,8 @@ _LOGGER = logging.getLogger(__name__)
 
 class HarvestTasks(EventEntity, RestoreEntity):
   """Sensor for displaying the tasks associated with a given harvest account."""
+  
+  _unrecorded_attributes = frozenset({ "tasks" })
 
   def __init__(self, hass: HomeAssistant, account_name: str, account_id: str):
     """Init sensor."""

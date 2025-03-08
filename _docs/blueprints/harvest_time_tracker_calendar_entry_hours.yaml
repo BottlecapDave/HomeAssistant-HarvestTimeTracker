@@ -1,0 +1,110 @@
+blueprint:
+  name: Harvest Time Tracker - Automatic entry from calendar (AI)
+  description: Automatically adds an entry to a correct task, based on AI, when a calendar entry ends based on the calendar summary. Because this is using AI, it might not pick the best option. This has been tested with ChatGPT.
+  domain: automation
+  author: BottlecapDave
+  input:
+    conversation_entity:
+      name: Conversation entity
+      description: The entity which determines the AI to use to determine the correct task
+      selector:
+        entity:
+          filter:
+          - domain:
+            - conversation
+    calendar_entity:
+      name: Calendar entity
+      description: The entity of the calendar to monitor
+      selector:
+        entity:
+          filter:
+          - domain:
+            - calendar
+    hours_today_entity:
+      name: Hours today entity
+      description: The entity which determines which account the entry should be added to (e.g sensor.harvest_time_tracker_{ACCOUNT_ID/NAME}_hours_today)
+      selector:
+        entity:
+          filter:
+          - domain:
+            - sensor
+            integration: harvest_time_tracker
+    tasks_entity:
+      name: Tasks entity
+      description: The event entity which determines tha available tasks (e.g event.harvest_time_tracker_{ACCOUNT_ID/NAME}_tasks)
+      selector:
+        entity:
+          filter:
+          - domain:
+            - event
+            integration: harvest_time_tracker
+    default_task_entity:
+      name: Default task entity
+      description: The default task entity to determine the task to log the calendar entry to if a suitable one isn't picked (e.g select.harvest_time_tracker_{ACCOUNT_ID/NAME}_default_task)
+      selector:
+        entity:
+          filter:
+          - domain:
+            - select
+            integration: harvest_time_tracker
+    additional_prompt_instructions:
+      name: Additional prompt instructions
+      description: Any additional instructions to provide to the prompt (e.g. favour certain tasks if given a choice)
+    additional_conditions:
+      name: Additional conditions
+      description: |
+        Extra conditions you may want to add to this automation 
+        (Example: Working)
+      default: []
+      selector:
+        condition:
+trigger_variables:
+  conversation_entity: !input conversation_entity
+  calendar_entity: !input calendar_entity
+  tasks_entity: !input tasks_entity
+  hours_today_entity: !input hours_today_entity
+  default_task_entity: !input default_task_entity
+  additional_prompt_instructions: !input additional_prompt_instructions
+  additional_conditions: !input additional_conditions
+mode: queued
+max: 4
+triggers:
+- trigger: calendar
+  event: end
+  entity_id: !input calendar_entity
+conditions:
+- and: !input additional_conditions
+actions:
+- action: conversation.process
+  data:
+    agent_id: conversation.chatgpt
+    text: >
+      "You have the following tasks {{ state_attr(tasks_entity, 'tasks') }}. Based on the text '{{ trigger.calendar_event.summary }}' pick the best task based on client_name and project_name. Only the selected task should be returned. Nothing else. If none of the example text can be found in a task a task cannot be found then '' should be returned. {{ additional_prompt_instructions }}"
+  response_variable: response
+- variables:
+    selected_task: >
+      {% if response.response.speech.plain.speech != "''" %}
+      {{ response.response.speech.plain.speech | regex_replace(find='\'', replace='"', ignorecase=True) | from_json }}
+      {% endif %}
+- action: harvest_time_tracker.add_time_with_hours
+  data:
+    project_id: >
+      {% if selected_task != "" %}
+      {{ selected_task.project_id | int }}
+      {% else %}
+      {{ state_attr(default_task_entity, 'project_id') }}
+      {% endif %}
+    task_id: >
+      {% if selected_task != "" %}
+      {{ selected_task.id | int }}
+      {% else %}
+      {{ state_attr(default_task_entity, 'task_id') }}
+      {% endif %}
+    date: >
+      {{ (trigger.calendar_event.end | as_datetime).strftime("%Y-%m-%d") }}
+    hours: >
+      {{ ((trigger.calendar_event.end | as_datetime | as_timestamp) - (trigger.calendar_event.start | as_datetime | as_timestamp)) / 60 / 60 }}
+    notes: >
+      {{ trigger.calendar_event.summary }}
+  target:
+    entity_id: !input hours_today_entity
