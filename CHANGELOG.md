@@ -1,3 +1,13 @@
+# [1.3.0](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.2.4...v1.3.0) (2025-03-08)
+
+
+### Features
+
+* Added ability to set a friendly name (1 hour dev time) ([cc88b81](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/cc88b812a5eb37afc874ff5012bdb23e73d14794))
+* Added blueprint to add entries based on calendar events using AI (2 hours dev time) ([15f7786](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/15f77865f4c03a8f6e04604199530eb1dbfeb676))
+* Added correct user agent for integration (5 minutes dev time) ([be10842](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/be1084265653709a0ba81059e4806a0a6af8517c))
+* Added event entity which exposes all tasks that the account is assigned to (30 minutes dev time) ([ca7594f](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/commit/ca7594f150b20631ea6ada1bc1d518cfe4d55f1f))
+
 ## [1.2.4](https://github.com/BottlecapDave/HomeAssistant-HarvestTimeTracker/compare/v1.2.3...v1.2.4) (2024-10-05)
 
 
