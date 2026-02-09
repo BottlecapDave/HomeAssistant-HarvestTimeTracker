@@ -4,14 +4,14 @@ blueprint:
   domain: automation
   author: BottlecapDave
   input:
-    conversation_entity:
-      name: Conversation entity
-      description: The entity which determines the AI to use to determine the correct task
+    ai_task_entity:
+      name: AI task entity
+      description: The AI task entity to run against
       selector:
         entity:
           filter:
           - domain:
-            - conversation
+            - ai_task
     calendar_entity:
       name: Calendar entity
       description: The entity of the calendar to monitor
@@ -58,14 +58,44 @@ blueprint:
       default: []
       selector:
         condition:
+    ignored_event_summaries:
+      name: Ignored event summaries
+      description: A list of event summaries which should be ignored (e.g. Lunch, WFH) and default to the default task
+      default: []
+      selector:
+        text:
+          multiple: true
+    known_summary_tasks:
+      name: Known event summaries
+      description: A list of partial event summaries which are known and should be prioritised when picking a task
+      default: []
+      selector:
+        object:
+          label_field: summary
+          multiple: true
+          fields:
+            summary:
+              label: Summary
+              selector:
+                text:
+            project_id:
+              label: Harvest Project Id
+              selector:
+                text:
+            task_id:
+              label: Harvest Task Id
+              selector:
+                text:
 trigger_variables:
-  conversation_entity: !input conversation_entity
+  ai_task_entity: !input ai_task_entity
   calendar_entity: !input calendar_entity
   tasks_entity: !input tasks_entity
   hours_today_entity: !input hours_today_entity
   default_task_entity: !input default_task_entity
   additional_prompt_instructions: !input additional_prompt_instructions
   additional_conditions: !input additional_conditions
+  ignored_event_summaries: !input ignored_event_summaries
+  known_summary_tasks: !input known_summary_tasks
 mode: queued
 max: 4
 triggers:
@@ -75,36 +105,110 @@ triggers:
 conditions:
 - and: !input additional_conditions
 actions:
-- action: conversation.process
-  data:
-    agent_id: conversation.chatgpt
-    text: >
-      "You have the following tasks {{ state_attr(tasks_entity, 'tasks') }}. Based on the text '{{ trigger.calendar_event.summary }}' pick the best task based on client_name and project_name. Only the selected task should be returned. Nothing else. If none of the example text can be found in a task a task cannot be found then '' should be returned. {{ additional_prompt_instructions }}"
-  response_variable: response
 - variables:
-    selected_task: >
-      {% if response.response.speech.plain.speech != "''" %}
-      {{ response.response.speech.plain.speech | regex_replace(find='\'', replace='"', ignorecase=True) | from_json }}
-      {% endif %}
-- action: harvest_time_tracker.add_time_with_hours
-  data:
-    project_id: >
-      {% if selected_task != "" %}
-      {{ selected_task.project_id | int }}
-      {% else %}
-      {{ state_attr(default_task_entity, 'project_id') }}
-      {% endif %}
-    task_id: >
-      {% if selected_task != "" %}
-      {{ selected_task.id | int }}
-      {% else %}
-      {{ state_attr(default_task_entity, 'task_id') }}
-      {% endif %}
-    date: >
-      {{ (trigger.calendar_event.end | as_datetime).strftime("%Y-%m-%d") }}
-    hours: >
-      {{ ((trigger.calendar_event.end | as_datetime | as_timestamp) - (trigger.calendar_event.start | as_datetime | as_timestamp)) / 60 / 60 }}
-    notes: >
-      {{ trigger.calendar_event.summary }}
-  target:
-    entity_id: !input hours_today_entity
+    is_ignored: >
+      {% set lower_summary = trigger.calendar_event.summary | lower %}
+      {{ lower_summary in ignored_events | lower }}
+    target_project: >
+      {% set lower_summary = trigger.calendar_event.summary | lower %}
+      {% for data in known_summary_tasks %}
+        {% if data.summary | lower in lower_summary %}
+          {{ data }}
+        {% endif %}
+      {% endfor %}
+- if:
+  - condition: template
+    value_template: >
+      {{ is_ignored }}
+  then:
+  - action: harvest_time_tracker.add_time_with_hours
+    data:
+      project_id: >
+        {{ state_attr(default_task_entity, 'project_id') }}
+      task_id: >
+        {{ state_attr(default_task_entity, 'task_id') }}
+      date: >
+        {{ (trigger.calendar_event.end | as_datetime).strftime("%Y-%m-%d") }}
+      hours: >
+        {{ ((trigger.calendar_event.end | as_datetime | as_timestamp) - (trigger.calendar_event.start | as_datetime | as_timestamp)) / 60 / 60 }}
+      notes: >
+        {{ trigger.calendar_event.summary }}
+    target:
+      entity_id: !input hours_today_entity
+  else:
+  - if:
+    - condition: template
+      value_template: >
+        {{ target_project != None and target_project != "" }}
+    then:
+    - action: harvest_time_tracker.add_time_with_hours
+      data:
+        project_id: >
+          {{ target_project.project_id }}
+        task_id: >
+          {{ target_project.task_id }}
+        date: >
+          {{ (trigger.calendar_event.end | as_datetime).strftime("%Y-%m-%d") }}
+        hours: >
+          {{ ((trigger.calendar_event.end | as_datetime | as_timestamp) - (trigger.calendar_event.start | as_datetime | as_timestamp)) / 60 / 60 }}
+        notes: >
+          {{ trigger.calendar_event.summary }}
+      target:
+        entity_id: !input hours_today_entity
+    else:
+    - action: ai_task.generate_data
+      response_variable: response
+      data:
+        task_name: Harvest Target Project
+        entity_id: !input ai_task_entity
+        instructions: >-
+          You have the following tasks {{
+          state_attr(tasks_entity, 'tasks') }}.
+          Based on the text '{{ trigger.calendar_event.summary }}' pick the best task based on
+          client_name and project_name. Only the selected task should be returned.
+          Nothing else. If none of the example text can be found in the client_name or
+          project_name then is_found should return false.{{ additional_prompt_instructions }}
+        structure:
+          is_found:
+            selector:
+              boolean:
+          project_id:
+            selector:
+              text:
+          id:
+            selector: 
+              text:
+    - if:
+      - condition: template
+        value_template: >
+          {{ response.data.is_found }}
+      then:
+      - action: harvest_time_tracker.add_time_with_hours
+        data:
+          project_id: >
+            {{ response.data.project_id | int }}
+          task_id: >
+            {{ response.data.id | int }}
+          date: >
+            {{ (trigger.calendar_event.end | as_datetime).strftime("%Y-%m-%d") }}
+          hours: >
+            {{ ((trigger.calendar_event.end | as_datetime | as_timestamp) - (trigger.calendar_event.start | as_datetime | as_timestamp)) / 60 / 60 }}
+          notes: >
+            {{ trigger.calendar_event.summary }}
+        target:
+          entity_id: !input hours_today_entity
+      else:
+      - action: harvest_time_tracker.add_time_with_hours
+        data:
+          project_id: >
+            {{ state_attr(default_task_entity, 'project_id') }}
+          task_id: >
+            {{ state_attr(default_task_entity, 'task_id') }}
+          date: >
+            {{ (trigger.calendar_event.end | as_datetime).strftime("%Y-%m-%d") }}
+          hours: >
+            {{ ((trigger.calendar_event.end | as_datetime | as_timestamp) - (trigger.calendar_event.start | as_datetime | as_timestamp)) / 60 / 60 }}
+          notes: >
+            {{ trigger.calendar_event.summary }}
+        target:
+          entity_id: !input hours_today_entity
